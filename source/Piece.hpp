@@ -30,6 +30,8 @@ protected:
     Color color;
     Type type;
     bool moved;
+    char typeToChar(Type type) const;
+    char colorToChar(Color color) const;
 public:
     void setColor(Color color);
     void setType(Type type);

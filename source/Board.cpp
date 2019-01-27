@@ -23,7 +23,7 @@ void Board::printBoard()
         {
             std::cout << std::endl;
         }
-        std::cout << squares[i].getPiece();
+        std::cout << squares[i].getPiece() << " ";
     }
 }
 
