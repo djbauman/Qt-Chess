@@ -8,10 +8,10 @@
 class Square
 {
 protected:
-    Piece piece;
+	Piece piece;
 public:
-    void setPiece(const Piece &piece);
-    const Piece &getPiece() const;
+	void setPiece(const Piece &piece);
+	const Piece &getPiece() const;
 };
 
 #endif

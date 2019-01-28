@@ -10,16 +10,16 @@
 
 class Board {
 public:
-    Board();
-    void printBoard();
-    Piece getPiece(const std::string &coords);
-    bool movePiece(const std::string &fromCoords, const std::string &toCoords);
-    ~Board();
+	Board();
+	void printBoard();
+	Piece getPiece(const std::string &coords);
+	bool movePiece(const std::string &fromCoords, const std::string &toCoords);
+	~Board();
 private:
-    int coordsToElement(const std::string &coords);
-    std::string elementToCoords(int element);
-    void setPiece(const std::string &coords, Piece piece);
-    std::array<Square, 64> squares;
+	int coordsToElement(const std::string &coords);
+	std::string elementToCoords(int element);
+	void setPiece(const std::string &coords, Piece piece);
+	std::array<Square, 64> squares;
 };
 
 #endif

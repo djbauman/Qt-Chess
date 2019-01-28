@@ -10,36 +10,36 @@
 // TODO: Added temporarily so I have something to work with.
 enum Type
 {
-    PAWN,
-    KNIGHT,
-    BISHOP,
-    ROOK,
-    QUEEN,
-    KING
+	PAWN,
+	KNIGHT,
+	BISHOP,
+	ROOK,
+	QUEEN,
+	KING
 };
 
 enum Color
 {
-    WHITE,
-    BLACK
+	WHITE,
+	BLACK
 };
 
 class Piece
 {
 protected:
-    Color color;
-    Type type;
-    bool moved;
-    char typeToChar(Type type) const;
-    char colorToChar(Color color) const;
+	Color color;
+	Type type;
+	bool moved;
+	char typeToChar(Type type) const;
+	char colorToChar(Color color) const;
 public:
-    void setColor(Color color);
-    void setType(Type type);
-    void setMoved(bool moved);
-    Color getColor() const;
-    Type getType() const;
-    bool isMoved() const;
-    friend std::ostream& operator<< (std::ostream &out, const Piece &piece);
+	void setColor(Color color);
+	void setType(Type type);
+	void setMoved(bool moved);
+	Color getColor() const;
+	Type getType() const;
+	bool isMoved() const;
+	friend std::ostream& operator<< (std::ostream &out, const Piece &piece);
 };
 
 #endif
