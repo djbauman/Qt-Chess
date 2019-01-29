@@ -1,5 +1,14 @@
 #include "Piece.hpp"
 
+Piece::Piece() = default;
+
+Piece::Piece(Type t, Color c)
+{
+	type = t;
+	isMoved = false;
+	color = c;
+}
+
 /* Override << operator to print out the type and color of the piece. */
 std::ostream &operator<<(std::ostream &out, const Piece &piece)
 {

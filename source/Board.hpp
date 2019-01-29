@@ -20,6 +20,7 @@ private:
 	std::string elementToCoords(int element);
 	void setPiece(const std::string &coords, Piece piece);
 	std::array<Square, 64> squares;
+	void setBoard();
 };
 
 #endif

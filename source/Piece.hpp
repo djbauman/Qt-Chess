@@ -33,6 +33,8 @@ protected:
 	char typeToChar(Type type) const;
 	char colorToChar(Color color) const;
 public:
+	Piece();
+	Piece(Type, Color);
 	void setColor(Color color);
 	void setType(Type type);
 	void setMoved(bool moved);
