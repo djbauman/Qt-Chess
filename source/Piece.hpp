@@ -10,6 +10,7 @@
 // TODO: Added temporarily so I have something to work with.
 enum Type
 {
+	NONE,
 	PAWN,
 	KNIGHT,
 	BISHOP,
