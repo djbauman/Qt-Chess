@@ -11,6 +11,7 @@ add_library(TestRunner STATIC
 add_executable(Main
 		source/main.cpp
 		source/Board.cpp
+		source/Board.hpp
 		source/Piece.cpp
 		source/Piece.hpp
 		source/Square.cpp
@@ -20,6 +21,7 @@ add_executable(Main
 add_executable(BoardTest
 		test/BoardTest.cpp
 		source/Board.cpp
+		source/Board.hpp
 		source/Piece.cpp
 		source/Piece.hpp
 		source/Square.cpp

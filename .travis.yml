@@ -12,6 +12,17 @@ install:
   - sudo apt-get install -qq g++-6
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 90
 
+  # CMake 3.13
+  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
+  - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
+  - travis_retry wget --no-check-certificate https://cmake.org/files/v3.13/cmake-3.13.3-Linux-x86_64.tar.gz
+  - tar -xvf cmake-3.13.3-Linux-x86_64.tar.gz > /dev/null
+  - mv cmake-3.13.3-Linux-x86_64 cmake-install
+  - PATH=${DEPS_DIR}/cmake-install:${DEPS_DIR}/cmake-install/bin:$PATH
+  - cd ${TRAVIS_BUILD_DIR}
+
 script:
-  - g++ source/main.cpp source/Board.cpp source/Piece.cpp source/Square.cpp -std=c++17 -o travis_gcc_cpp17
-  - ./travis_gcc_cpp17
+  - mkdir -p build
+  - cd build
+  - cmake ${CMAKE_OPTIONS} -DCMAKE_CXX_FLAGS=${CXX_FLAGS} -DCMAKE_BUILD_TYPE=Coverage -DBUILD_TESTS=ON ..
+  - make
