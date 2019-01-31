@@ -41,7 +41,7 @@ public:
 	void setMoved(bool moved);
 	Color getColor() const;
 	Type getType() const;
-	bool isMoved() const;
+	bool getMoved() const;
 	friend std::ostream& operator<< (std::ostream &out, const Piece &piece);
 };
 
