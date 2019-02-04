@@ -13,7 +13,7 @@ Piece::Piece(Type t, Color c)
 std::ostream &operator<<(std::ostream &out, const Piece &piece)
 {
 	// TODO: These are pretty meaningless as enum values right now (00 is a white pawn) so this will need to be modified.
-	out << piece.colorToChar(piece.getColor()) << '-' << piece.typeToChar(piece.getType()); // using a getter because this is a friend function
+	out << piece.colorToChar(piece.getColor()) << piece.typeToChar(piece.getType()) << ' '; // using a getter because this is a friend function
 
 	return out;
 }
@@ -60,6 +60,7 @@ char Piece::typeToChar(Type type) const
 		case ROOK: return 'R';
 		case QUEEN: return 'Q';
 		case KING: return 'K';
+		case NONE: return '-';
 		default: return ' ';
 	}
 }
@@ -70,6 +71,7 @@ char Piece::colorToChar(Color color) const
 	{
 		case WHITE: return 'W';
 		case BLACK: return 'B';
+		case OPEN: return'-';
 		default: return ' ';
 	}
 }

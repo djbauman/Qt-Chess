@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "Board.hpp"
 
 // Constructor
@@ -29,14 +30,15 @@ void Board::printBoard()
 	int i = 0;
 	for (std::string space : spaces) 
 	{
+
 		std::cout << squareMap[space].getPiece() << ' ';
+
 		i++;
 		if (i == 8) 
 		{
 			i = 0;
 			std::cout<<'\n';
 		}
-
 	}
 }
 
@@ -50,6 +52,22 @@ void Board::setPiece(const std::string &coords, Piece piece)
 Piece Board::getPiece(const std::string &coords)
 {
 	return squareMap[coords].getPiece();
+}
+
+Piece Board::getPieceByIndex(const int i, const int j)
+{
+	return squares[i][j].getPiece();
+}
+
+/* Returns the the vector indices from a bord space. */
+int* Board::coordToIndex(std::string coords)
+{
+	char let = coords[0];
+	char* num = &coords[1];
+	int indicies[2];
+	indicies[0] = let - 97;
+	indicies[1] = 8-std::atoi(num);
+	return indicies;
 }
 
 // Places the appropriate pieces on the appropriate spots to start a chess game
@@ -154,6 +172,21 @@ void Board::setBoard()
 	Board::setPiece("g7", bp7);
 	Piece bp8{ PAWN , BLACK };
 	Board::setPiece("h7", bp8);
+
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (squares[i][j].getPiece().getType() != NONE)
+			{
+				continue;
+			}
+			else {
+				Piece blankPiece{ NONE , OPEN };
+				squares[i][j].setPiece(blankPiece);
+			}
+		}
+	}
 }
 
 // Destructor

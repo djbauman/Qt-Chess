@@ -16,6 +16,8 @@ public:
 	void printBoard();
 	Piece getPiece(const std::string &coords);
 	void setPiece(const std::string &coords, Piece piece);
+	int* coordToIndex(std::string coords);
+	Piece getPieceByIndex(const int i, const int j);
 	~Board();
 private:
 	void setBoard();

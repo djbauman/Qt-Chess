@@ -21,6 +21,7 @@ enum Type
 
 enum Color
 {
+	OPEN,
 	WHITE,
 	BLACK
 };
