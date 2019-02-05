@@ -10,7 +10,7 @@
 // TODO: Added temporarily so I have something to work with.
 enum Type
 {
-	NONE,
+	NOPIECE,
 	PAWN,
 	KNIGHT,
 	BISHOP,
@@ -21,7 +21,7 @@ enum Type
 
 enum Color
 {
-	OPEN,
+	NOCOLOR,
 	WHITE,
 	BLACK
 };

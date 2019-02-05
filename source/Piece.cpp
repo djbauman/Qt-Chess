@@ -60,7 +60,7 @@ char Piece::typeToChar(Type type) const
 		case ROOK: return 'R';
 		case QUEEN: return 'Q';
 		case KING: return 'K';
-		case NONE: return '-';
+		case NOPIECE: return '-';
 		default: return ' ';
 	}
 }
@@ -71,7 +71,7 @@ char Piece::colorToChar(Color color) const
 	{
 		case WHITE: return 'W';
 		case BLACK: return 'B';
-		case OPEN: return'-';
+		case NOCOLOR: return'-';
 		default: return ' ';
 	}
 }

@@ -59,15 +59,13 @@ Piece Board::getPieceByIndex(const int i, const int j)
 	return squares[i][j].getPiece();
 }
 
-/* Returns the the vector indices from a bord space. */
-int* Board::coordToIndex(std::string coords)
+
+// Converts board space name (e.g. "A1") to a tuple of vector indices ([i][j])
+std::tuple<int,int> Board::getIndex(std::string input)
 {
-	char let = coords[0];
-	char* num = &coords[1];
-	int indicies[2];
-	indicies[0] = let - 97;
-	indicies[1] = 8-std::atoi(num);
-	return indicies;
+	int column = input[0] - 97;
+	int row = 8 - (input[1] - 48);
+	return std::make_tuple(column, row);
 }
 
 // Places the appropriate pieces on the appropriate spots to start a chess game
@@ -86,11 +84,11 @@ void Board::setBoard()
 	Board::setPiece("c1", wb1);
 
 	// White King Placement
-	Piece wk{ KING , WHITE };
+	Piece wk{ QUEEN , WHITE };
 	Board::setPiece("d1", wk);
 
 	// White Queen Placement
-	Piece wq{ QUEEN ,WHITE };
+	Piece wq{ KING ,WHITE };
 	Board::setPiece("e1", wq);
 
 	// White Bishop Placement
@@ -136,11 +134,11 @@ void Board::setBoard()
 	Board::setPiece("c8", bb1);
 
 	// Black King Placement
-	Piece bk{ KING , BLACK };
+	Piece bk{ QUEEN , BLACK };
 	Board::setPiece("d8", bk);
 
 	// Black Queen Placement
-	Piece bq{ QUEEN , BLACK };
+	Piece bq{ KING , BLACK };
 	Board::setPiece("e8", bq);
 
 	// Black Bishop Placement
@@ -177,12 +175,12 @@ void Board::setBoard()
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			if (squares[i][j].getPiece().getType() != NONE)
+			if (squares[i][j].getPiece().getType() != NOPIECE)
 			{
 				continue;
 			}
 			else {
-				Piece blankPiece{ NONE , OPEN };
+				Piece blankPiece{ NOPIECE , NOCOLOR };
 				squares[i][j].setPiece(blankPiece);
 			}
 		}

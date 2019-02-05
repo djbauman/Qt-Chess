@@ -15,7 +15,9 @@ add_executable(Main
 		source/Piece.cpp
 		source/Piece.hpp
 		source/Square.cpp
-		source/Square.hpp)
+		source/Square.hpp
+		source/PieceController.hpp
+		source/PieceController.cpp)
 
 # Tests
 add_executable(BoardTest
@@ -25,5 +27,7 @@ add_executable(BoardTest
 		source/Piece.cpp
 		source/Piece.hpp
 		source/Square.cpp
-		source/Square.hpp)
+		source/Square.hpp
+		source/PieceController.hpp
+		source/PieceController.cpp)
 target_link_libraries(BoardTest TestRunner)

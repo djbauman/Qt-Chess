@@ -4,6 +4,7 @@
 //#include <array>
 #include <vector>
 #include <map>
+#include <tuple>
 #include "Piece.hpp"
 #include "Square.hpp"
 
@@ -16,7 +17,7 @@ public:
 	void printBoard();
 	Piece getPiece(const std::string &coords);
 	void setPiece(const std::string &coords, Piece piece);
-	int* coordToIndex(std::string coords);
+	std::tuple<int, int> getIndex(std::string);
 	Piece getPieceByIndex(const int i, const int j);
 	~Board();
 private:
