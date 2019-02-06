@@ -15,12 +15,13 @@ public:
 	Board();
 	void printBoard();
 	const Piece* getPiece(const std::string &coords) const;
-	std::unique_ptr<Piece> setPiece(const std::string &coords, std::unique_ptr<Piece> piece);
+	bool movePiece(const std::string &fromCoords, const std::string &toCoords);
 	~Board();
 private:
+	std::map<std::string, std::unique_ptr<Square>> squares;
 	void prepSquares();
 	void prepPieces();
-	std::map<std::string, std::unique_ptr<Square>> squares;
+	std::unique_ptr<Piece> setPiece(const std::string &coords, std::unique_ptr<Piece> piece);
 };
 
 #endif

@@ -67,5 +67,18 @@ void Board::printBoard()
 	}
 }
 
+/* Moves a piece at one coordinate to another coordinate. */
+bool Board::movePiece(const std::string &fromCoords, const std::string &toCoords)
+{
+	// TODO: Implement error checking. If there is no piece at the from location, or if squares don't exist,
+	//  	program will crash.
+
+	// When the interior setPiece() function is called it sets the piece currently at that location (fromCoords) to
+	// nullptr and then returns a pointer to the piece that was previously at that location. That piece is then assigned
+	// to the square referenced by the parameter toCoords.
+	setPiece(toCoords, setPiece(fromCoords, nullptr));
+	return false;
+}
+
 /* Destructor */
 Board::~Board() = default;
