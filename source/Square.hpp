@@ -3,15 +3,15 @@
 
 #include "Piece.hpp"
 
-/* The Square is currently just a container for a piece, but this responsibility may grow in the future. */
+/* The Square is currently just a container for a Piece, but this responsibility may grow in the future. */
 
 class Square
 {
-protected:
-	Piece piece;
 public:
-	void setPiece(const Piece &piece);
-	const Piece &getPiece() const;
+	const Piece* getPiece() const;
+	std::unique_ptr<Piece> setPiece(std::unique_ptr<Piece> piece);
+protected:
+	std::unique_ptr<Piece> piece;
 };
 
 #endif

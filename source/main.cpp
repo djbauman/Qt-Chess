@@ -1,12 +1,14 @@
 #include <iostream>
 #include "Board.hpp"
+#include "Game.hpp"
 
 using std::cout;
 using std::endl;
 
 int main()
 {
-	Board board;
-	board.printBoard();
+	Game game;
+	game.run();
+
 	return 0;
 }

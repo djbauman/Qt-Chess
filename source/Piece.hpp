@@ -3,14 +3,10 @@
 
 #include <ostream>
 
-/* The Piece class serves primarily as a container for data. The Piece knows what type it is and what color it is, and
- * whether or not it has moved, which will be useful for castling and pawn movement. It doesn't know anything about it's
- * location, for example. That information is contained in the Board class. */
+/* The Piece class is an abstract class from which specific pieces (Pawn, Rook, etc.) will inherit. */
 
-// TODO: Added temporarily so I have something to work with.
-enum Type
+    enum Type
 {
-	NONE,
 	PAWN,
 	KNIGHT,
 	BISHOP,
@@ -27,14 +23,7 @@ enum Color
 
 class Piece
 {
-protected:
-	Color color;
-	Type type;
-	bool moved;
-	char typeToChar(Type type) const;
-	char colorToChar(Color color) const;
 public:
-	Piece();
 	Piece(Type, Color);
 	void setColor(Color color);
 	void setType(Type type);
@@ -42,7 +31,15 @@ public:
 	Color getColor() const;
 	Type getType() const;
 	bool getMoved() const;
+	virtual bool movePiece() = 0;
 	friend std::ostream& operator<< (std::ostream &out, const Piece &piece);
+	virtual ~Piece() = default;
+protected:
+	Color color;
+	Type type;
+	bool moved;
+	char typeToChar(Type type) const;
+	char colorToChar(Color color) const;
 };
 
 #endif

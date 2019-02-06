@@ -1,24 +1,22 @@
+#include <iostream>
 #include "Piece.hpp"
 
-Piece::Piece() = default;
-
+/* Default constructor */
 Piece::Piece(Type t, Color c)
 {
 	type = t;
-	moved = false;
 	color = c;
+	moved = false;
 }
 
 /* Override << operator to print out the type and color of the piece. */
 std::ostream &operator<<(std::ostream &out, const Piece &piece)
 {
-	// TODO: These are pretty meaningless as enum values right now (00 is a white pawn) so this will need to be modified.
-	out << piece.colorToChar(piece.getColor()) << '-' << piece.typeToChar(piece.getType()); // using a getter because this is a friend function
-
+	// This has to use a getter because this is a friend function
+	out << piece.colorToChar(piece.getColor()) << '-' << piece.typeToChar(piece.getType());
 	return out;
 }
 
-/* --- Getters and setters --- */
 Color Piece::getColor() const
 {
 	return color;
