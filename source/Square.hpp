@@ -1,6 +1,7 @@
 #ifndef CAPSTONE_SQUARE_HPP
 #define CAPSTONE_SQUARE_HPP
 
+#include <memory>
 #include "Piece.hpp"
 
 /* The Square is currently just a container for a Piece, but this responsibility may grow in the future. */

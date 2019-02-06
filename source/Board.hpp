@@ -1,9 +1,8 @@
 #ifndef CAPSTONE_BOARD_HPP
 #define CAPSTONE_BOARD_HPP
 
-#include <array>
-#include <vector>
 #include <map>
+#include <memory>
 #include "Piece.hpp"
 #include "Square.hpp"
 

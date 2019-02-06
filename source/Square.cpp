@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include "Square.hpp"
 
 const Piece* Square::getPiece() const

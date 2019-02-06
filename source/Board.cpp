@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include "Board.hpp"
 #include "Pawn.hpp"
 
