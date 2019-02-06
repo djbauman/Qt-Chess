@@ -24,16 +24,14 @@ void Board::prepSquares()
 	squares.insert(std::make_pair("b3", std::make_unique<Square>()));
 }
 
-/* Places the appropriate pieces on the appropriate spots to start a game. */
+/* Creates and places the appropriate pieces on the appropriate spots to start a game. */
 void Board::prepPieces()
 {
 	// TODO: Fill out the rest of the pieces.
 
 	// White Pawn Placement
-	std::unique_ptr<Piece> wp1 = std::make_unique<Pawn>(WHITE);
-	Board::setPiece("a2", std::move(wp1));
-	std::unique_ptr<Piece> wp2 = std::make_unique<Pawn>(WHITE);
-	Board::setPiece("b2", std::move(wp2));
+	setPiece("a2", std::make_unique<Pawn>(WHITE));
+	setPiece("b2", std::make_unique<Pawn>(WHITE));
 }
 
 /* Sets a piece to its appropriate location in the map. */
