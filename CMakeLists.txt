@@ -10,20 +10,28 @@ add_library(TestRunner STATIC
 # Main
 add_executable(Main
 		source/main.cpp
-		source/Board.cpp
+		source/Game.hpp
+		source/Game.cpp
 		source/Board.hpp
-		source/Piece.cpp
+		source/Board.cpp
 		source/Piece.hpp
+		source/Piece.cpp
+		source/Square.hpp
 		source/Square.cpp
-		source/Square.hpp)
+		source/Pawn.hpp
+		source/Pawn.cpp)
 
 # Tests
 add_executable(BoardTest
 		test/BoardTest.cpp
-		source/Board.cpp
+		source/Game.hpp
+		source/Game.cpp
 		source/Board.hpp
-		source/Piece.cpp
+		source/Board.cpp
 		source/Piece.hpp
+		source/Piece.cpp
+		source/Square.hpp
 		source/Square.cpp
-		source/Square.hpp)
+		source/Pawn.hpp
+		source/Pawn.cpp)
 target_link_libraries(BoardTest TestRunner)
