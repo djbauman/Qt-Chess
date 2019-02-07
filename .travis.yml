@@ -2,6 +2,14 @@ language: cpp
 compiler: gcc
 dist: trusty
 
+os: linux
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-7
+
 before_install:
   # C++17
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
@@ -22,6 +30,8 @@ install:
   - cd ${TRAVIS_BUILD_DIR}
 
 script:
+  - export CC=gcc-7
+  - export CXX=g++-7
   - mkdir -p build
   - cd build
   - cmake ${CMAKE_OPTIONS} -DCMAKE_CXX_FLAGS=${CXX_FLAGS} -DCMAKE_BUILD_TYPE=Coverage -DBUILD_TESTS=ON ..
