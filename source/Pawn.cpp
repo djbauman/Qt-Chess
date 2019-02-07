@@ -4,8 +4,16 @@
 // Constructor
 Pawn::Pawn(Color c) : Piece(PAWN, c) {}
 
-// Move piece
-bool Pawn::isValidMove(const std::string &fromCoords, const std::string &toCoords)
+/* Determine if this is a valid move based on the rules of the pawn. */
+bool Pawn::isValidMove(const Board *board, const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const
 {
-	return false;
+	// TODO: Implement
+	if (board->isOccupied(toCoords))
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }

@@ -3,6 +3,9 @@
 
 #include <ostream>
 
+// Forward declaration to avoid circular dependency
+class Board;
+
 /* The Piece class is an abstract class from which specific pieces (Pawn, Rook, etc.) will inherit. */
 
     enum Type
@@ -31,7 +34,7 @@ public:
 	Color getColor() const;
 	Type getType() const;
 	bool getMoved() const;
-	virtual bool isValidMove(const std::string &fromCoords, const std::string &toCoords) = 0;
+	virtual bool isValidMove(const Board *board, const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const = 0;
 	friend std::ostream& operator<< (std::ostream &out, const Piece &piece);
 	virtual ~Piece() = default;
 protected:

@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Board.hpp"
 #include "Piece.hpp"
 
 /* Default constructor */

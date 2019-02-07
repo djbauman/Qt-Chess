@@ -3,8 +3,6 @@
 void Game::run()
 {
 	board.printBoard();
-
-	board.movePiece("a2", "a3");
-
+	board.movePiece(std::make_pair(6, 0), std::make_pair(6, 1));
 	board.printBoard();
 }
