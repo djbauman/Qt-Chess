@@ -31,7 +31,7 @@ public:
 	Color getColor() const;
 	Type getType() const;
 	bool getMoved() const;
-	virtual bool movePiece() = 0;
+	virtual bool isValidMove(const std::string &fromCoords, const std::string &toCoords) = 0;
 	friend std::ostream& operator<< (std::ostream &out, const Piece &piece);
 	virtual ~Piece() = default;
 protected:

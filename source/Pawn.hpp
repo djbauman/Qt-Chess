@@ -7,7 +7,7 @@ class Pawn : public Piece
 {
 public:
 	Pawn(Color c);
-	bool movePiece() override;
+	bool isValidMove(const std::string &fromCoords, const std::string &toCoords) override;
 	~Pawn() override = default;
 };
 
