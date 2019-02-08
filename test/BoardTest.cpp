@@ -9,21 +9,38 @@ TEST_CASE("Move types")
 	Board board;
 
 	// Vertical moves
+	REQUIRE(board.isVerticalMove(std::pair{0,0}, std::pair{0,0}) == true);
 	REQUIRE(board.isVerticalMove(std::pair{3,2}, std::pair{0,2}) == true);
 	REQUIRE(board.isVerticalMove(std::pair{0,0}, std::pair{4,0}) == true);
-	REQUIRE(board.isVerticalMove(std::pair{0,0}, std::pair{0,0}) == true);
 	REQUIRE(board.isVerticalMove(std::pair{3,2}, std::pair{1,4}) == false);
 
 	// Horizontal moves
+	REQUIRE(board.isHorizontalMove(std::pair{0,0}, std::pair{0,0}) == true);
 	REQUIRE(board.isHorizontalMove(std::pair{2,0}, std::pair{2,4}) == true);
 	REQUIRE(board.isHorizontalMove(std::pair{3,4}, std::pair{3,0}) == true);
-	REQUIRE(board.isHorizontalMove(std::pair{0,0}, std::pair{0,0}) == true);
 	REQUIRE(board.isHorizontalMove(std::pair{4,0}, std::pair{0,4}) == false);
 
 	// Diagonal moves
-	REQUIRE(board.isDiagonalMove(std::pair{0,0}, std::pair{4,4}) == true);
 	REQUIRE(board.isDiagonalMove(std::pair{0,0}, std::pair{0,0}) == true);
+	REQUIRE(board.isDiagonalMove(std::pair{0,0}, std::pair{4,4}) == true);
 	REQUIRE(board.isDiagonalMove(std::pair{0,0}, std::pair{0,2}) == false);
 	REQUIRE(board.isDiagonalMove(std::pair{0,0}, std::pair{3,0}) == false);
 	REQUIRE(board.isDiagonalMove(std::pair{0,2}, std::pair{4,1}) == false);
+}
+
+TEST_CASE("Move lengths")
+{
+	Board board;
+
+	// Vertical move lengths
+	REQUIRE(board.getMoveLength(std::pair{0,0}, std::pair{0,0}) == 0);
+	REQUIRE(board.getMoveLength(std::pair{0,0}, std::pair{4,0}) == 4);
+
+	// Horizontal move lengths
+	REQUIRE(board.getMoveLength(std::pair{0,0}, std::pair{0,0}) == 0);
+	REQUIRE(board.getMoveLength(std::pair{0,0}, std::pair{3,0}) == 3);
+
+	// Diagonal move lengths
+	REQUIRE(board.getMoveLength(std::pair{0,0}, std::pair{0,0}) == 0);
+	REQUIRE(board.getMoveLength(std::pair{3,3}, std::pair{1,1}) == 2);
 }

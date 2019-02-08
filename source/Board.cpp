@@ -202,25 +202,50 @@ bool Board::isOccupied(const std::pair<int, int> &coords) const
 }
 
 /* If the column remains unchanged over the course of the move, then it's a vertical move. */
-bool Board::isVerticalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords)
+bool Board::isVerticalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const
 {
 	return fromCoords.second == toCoords.second;
 }
 
 /* If the row remains unchanged over the course of the move, then it's a horizontal move. */
-bool Board::isHorizontalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords)
+bool Board::isHorizontalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const
 {
 	return fromCoords.first == toCoords.first;
 }
 
 /* If the (absolute value of the) horizontal movement is equal to the (absolute value of the) vertical movement,
  * then the movement is diagonal. */
-bool Board::isDiagonalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords)
+bool Board::isDiagonalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const
 {
 	int verticalDifference = toCoords.first - fromCoords.first;
 	int horizontalDifference = toCoords.second - fromCoords.second;
 
 	return abs(verticalDifference) == abs(horizontalDifference);
+}
+
+/* Returns the number of steps necessary to complete a move from one locations a to b. If a and b are the same location
+ * then it returns 0, if adjacent, 1, etc. Moving up one square and to the right one square (i.e. a diagonal move to
+ * the northeast) would return 1, rather than sqrt(2). Let's not get crazy. */
+int Board::getMoveLength(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const
+{
+	if (isVerticalMove(fromCoords, toCoords))
+	{
+		return abs(toCoords.first - fromCoords.first);
+	}
+	else if (isHorizontalMove(fromCoords, toCoords))
+	{
+		return abs(toCoords.second - fromCoords.second);
+	}
+	else if (isDiagonalMove(fromCoords, toCoords))
+	{
+		// We've already verified that this is a diagonal move, so we can just return the difference along one axis
+		return abs(toCoords.first - fromCoords.first);
+	}
+	else
+	{
+		// Measuring non-linear distance is essentially undefined
+		return -1;
+	}
 }
 
 /* Destructor */

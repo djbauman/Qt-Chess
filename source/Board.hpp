@@ -22,11 +22,12 @@ public:
 	const Piece* getPiece(const std::pair<int, int> &coords) const;
 	bool movePiece(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords);
 
-	// Board attributes
+	// Board and movement attributes
 	bool isOccupied(const std::pair<int, int> &coords) const;
-	bool isVerticalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords);
-	bool isHorizontalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords);
-	bool isDiagonalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords);
+	bool isVerticalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
+	bool isHorizontalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
+	bool isDiagonalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
+	int getMoveLength(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
 
 	// Destructor
 	~Board();
