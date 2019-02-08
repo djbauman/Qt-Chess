@@ -359,5 +359,24 @@ bool Board::isPathClear(const std::pair<int, int> &fromCoords, const std::pair<i
 	}
 }
 
+/* Determines, based on a piece's color, whether a particular move represents forward movement for that piece. Note that
+ * the move does not have to be vertical - diagonal moves can be forward too as long as they are not diagonally backward. */
+bool Board::isForwardMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords, const Piece *piece) const
+{
+	Color pieceColor = piece->getColor();
+	if (pieceColor == BLACK && fromCoords.first < toCoords.first)
+	{
+		return true;
+	}
+	else if (pieceColor == WHITE && fromCoords.first > toCoords.first)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 /* Destructor */
 Board::~Board() = default;

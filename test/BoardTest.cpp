@@ -72,3 +72,18 @@ TEST_CASE("Clear and obstructed paths")
 	REQUIRE(board.isPathClear(std::pair{7,0}, std::pair{0,7}) == FALSE); // SW->NE diagonal
 	REQUIRE(board.isPathClear(std::pair{3,2}, std::pair{4,7}) == FALSE); // not vertical, horizontal, or diagonal
 }
+
+TEST_CASE()
+{
+	Board board;
+	const Piece *whitePawn = board.getPiece(std::pair{6,7});
+	const Piece *blackPawn = board.getPiece(std::pair{1,7});
+
+	// Forward movement
+	REQUIRE(board.isForwardMove(std::pair{6,7}, std::pair{5,7}, whitePawn) == TRUE);
+	REQUIRE(board.isForwardMove(std::pair{1,7}, std::pair{2,7}, blackPawn) == TRUE);
+
+	// Backward movement
+	REQUIRE(board.isForwardMove(std::pair{6,7}, std::pair{7,7}, whitePawn) == FALSE);
+	REQUIRE(board.isForwardMove(std::pair{1,7}, std::pair{0,7}, blackPawn) == FALSE);
+}
