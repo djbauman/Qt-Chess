@@ -24,6 +24,9 @@ public:
 
 	// Board attributes
 	bool isOccupied(const std::pair<int, int> &coords) const;
+	bool isVerticalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords);
+	bool isHorizontalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords);
+	bool isDiagonalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords);
 
 	// Destructor
 	~Board();

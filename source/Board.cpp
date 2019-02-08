@@ -201,5 +201,27 @@ bool Board::isOccupied(const std::pair<int, int> &coords) const
 	return getPiece(coords) != nullptr;
 }
 
+/* If the column remains unchanged over the course of the move, then it's a vertical move. */
+bool Board::isVerticalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords)
+{
+	return fromCoords.second == toCoords.second;
+}
+
+/* If the row remains unchanged over the course of the move, then it's a horizontal move. */
+bool Board::isHorizontalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords)
+{
+	return fromCoords.first == toCoords.first;
+}
+
+/* If the (absolute value of the) horizontal movement is equal to the (absolute value of the) vertical movement,
+ * then the movement is diagonal. */
+bool Board::isDiagonalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords)
+{
+	int verticalDifference = toCoords.first - fromCoords.first;
+	int horizontalDifference = toCoords.second - fromCoords.second;
+
+	return abs(verticalDifference) == abs(horizontalDifference);
+}
+
 /* Destructor */
 Board::~Board() = default;
