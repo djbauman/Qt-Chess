@@ -243,8 +243,119 @@ int Board::getMoveLength(const std::pair<int, int> &fromCoords, const std::pair<
 	}
 	else
 	{
-		// Measuring non-linear distance is essentially undefined
+		// Measuring non-linear distance is essentially undefined, so we'll return -1
 		return -1;
+	}
+}
+
+/* Checks whether there is a clear path between two points. Note that this only checks the intermediate spaces. In
+ * other words, if the destination (as recorded in toCoords) is occupied, but all spaces between are empty, then this
+ * function will still evaluate to true. The thinking behind this is that for all pieces except the pawn (which has its
+ * own rule specificed in the Pawn class) whether a piece occupies its destination doesn't prevent its movement, it only
+ * determines whether that movement results in a capture. */
+bool Board::isPathClear(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const
+{
+	// Gather some information about the move
+	int moveLength = getMoveLength(fromCoords, toCoords);
+	bool isVertical = isVerticalMove(fromCoords, toCoords);
+	bool isHorizontal = isHorizontalMove(fromCoords, toCoords);
+	bool isDiagonal = isDiagonalMove(fromCoords, toCoords);
+	bool movingSouth = fromCoords.first < toCoords.first; 			// "south" meaning from white side to black side
+	bool movingEast = fromCoords.second < toCoords.first;			// "east" meaning from white left to white right
+
+	// If same or adjacent location, then path is definitely clear
+	if (moveLength == 0 || moveLength == 1)
+	{
+		return true;
+	}
+
+	// Check intermediate locations between fromCoords and toCoords for vacancy
+	std::pair<int,int> fromTemp = fromCoords;
+	std::pair<int,int> toTemp = toCoords;
+	if (isVertical)
+	{
+		// We can halve the number of for-loops if we swap the start and end points depending on the direction of travel
+		if (!movingSouth)
+		{
+			std::swap(fromTemp, toTemp);
+		}
+
+		for (int i = fromTemp.first + 1; i < toTemp.first; i++)
+		{
+			if (isOccupied(std::pair{i, fromTemp.second}))
+			{
+				return false;
+			}
+		}
+
+		// Checked all intermediate locations and found them to be empty, so can return true
+		return true;
+	}
+	else if (isHorizontal)
+	{
+		// We can halve the number of for-loops if we swap the start and end points depending on the direction of travel
+		if (!movingEast)
+		{
+			std::swap(fromTemp, toTemp);
+		}
+
+		for (int i = fromTemp.second + 1; i < toTemp.second; i++)
+		{
+			if (isOccupied(std::pair{fromTemp.first, i}))
+			{
+				return false;
+			}
+		}
+
+		// Checked all intermediate locations and found them to be empty, so can return true
+		return true;
+	}
+	else if (isDiagonal)
+	{
+		if (movingSouth == movingEast) 			// moving southeast or northwest
+		{
+			// loop assumes southeast travel, swap if that's not the case
+			if (!movingSouth && !movingEast)
+			{
+				std::swap(fromTemp, toTemp);
+			}
+
+			for (int i = fromTemp.first + 1; i < toTemp.first; i++)
+			{
+				if (isOccupied(std::pair{i, i}))
+				{
+					return false;
+				}
+			}
+
+			// Checked all intermediate locations and found them to be empty, so can return true
+			return true;
+
+		}
+		else if (movingSouth != movingEast)		// moving northeast or southwest
+		{
+			// loop assumes northeast travel, swap if that's not the case
+			if (movingSouth && !movingEast)
+			{
+				std::swap(fromTemp, toTemp);
+			}
+
+			for (int i = fromTemp.first + 1; i < toTemp.first; i++)
+			{
+				if (isOccupied(std::pair{i, 7 - i}))
+				{
+					return false;
+				}
+			}
+
+			// Checked all intermediate locations and found them to be empty, so can return true
+			return true;
+		}
+	}
+	else
+	{
+		// path is neither vertical, horizontal, nor diagonal, so it's not a clear path
+		return false;
 	}
 }
 
