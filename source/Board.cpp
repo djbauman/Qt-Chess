@@ -116,7 +116,7 @@ bool Board::movePiece(const std::pair<int, int> &fromCoords, const std::pair<int
 	const Piece *piece = getPiece(fromCoords);
 	if (!piece->isValidMove(this, fromCoords, toCoords))
 	{
-		std::cout << "Error: This is an invalid move for this type of piece";
+		std::cout << "Error: This is an invalid move for this type of piece" << std::endl;
 		return false;
 	}
 
@@ -126,6 +126,7 @@ bool Board::movePiece(const std::pair<int, int> &fromCoords, const std::pair<int
 	// nullptr and then returns a pointer to the piece that was previously at that location. That piece is then assigned
 	// to the square referenced by the parameter toCoords. Properly handles absence of a piece at a location.
 	setPiece(toCoords, setPiece(fromCoords, nullptr));
+
 	return true;
 }
 
