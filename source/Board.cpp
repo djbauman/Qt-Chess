@@ -105,7 +105,7 @@ bool Board::movePiece(const std::pair<int, int> &fromCoords, const std::pair<int
 	}
 
 	// Check if from location is occupied
-	//this needs to change to is occupied by the same type
+	// TODO: This needs to change to is occupied by the same type
 	if (!isOccupied(fromCoords))
 	{
 		std::cout << "Error: Cannot move from "
