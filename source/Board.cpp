@@ -353,11 +353,9 @@ bool Board::isPathClear(const std::pair<int, int> &fromCoords, const std::pair<i
 			return true;
 		}
 	}
-	else
-	{
-		// path is neither vertical, horizontal, nor diagonal, so it's not a clear path
-		return false;
-	}
+
+	// path is neither vertical, horizontal, nor diagonal, so it's not a clear path
+	return false;
 }
 
 /* Determines, based on a piece's color, whether a particular move represents forward movement for that piece. Note that
