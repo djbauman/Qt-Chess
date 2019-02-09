@@ -87,3 +87,8 @@ TEST_CASE()
 	REQUIRE(board.isForwardMove(std::pair{6,7}, std::pair{7,7}, whitePawn) == false);
 	REQUIRE(board.isForwardMove(std::pair{1,7}, std::pair{0,7}, blackPawn) == false);
 }
+
+TEST_CASE()
+{
+	// TODO: Implement unit tests for isValidMove() for Pawn
+}
