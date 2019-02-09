@@ -17,9 +17,10 @@ void Board::prepSquares()
 {
 	for (int i = 0; i < 8; i++)
 	{
+
 		for (int j = 0; j < 8; j++)
 		{
-			squares.insert(std::pair{std::pair{i, j}, std::make_unique<Square>()});
+			squares.insert(std::pair <std::pair <int, int>, std::unique_ptr<Square>> (std::make_pair(i, j), std::make_unique<Square>()));
 		}
 	}
 }
@@ -30,24 +31,24 @@ void Board::prepPieces()
 	// TODO: Fill out the rest of the pieces.
 
 	// White pawns
-	setPiece(std::pair{6, 0}, std::make_unique<Pawn>(WHITE));
-	setPiece(std::pair{6, 1}, std::make_unique<Pawn>(WHITE));
-	setPiece(std::pair{6, 2}, std::make_unique<Pawn>(WHITE));
-	setPiece(std::pair{6, 3}, std::make_unique<Pawn>(WHITE));
-	setPiece(std::pair{6, 4}, std::make_unique<Pawn>(WHITE));
-	setPiece(std::pair{6, 5}, std::make_unique<Pawn>(WHITE));
-	setPiece(std::pair{6, 6}, std::make_unique<Pawn>(WHITE));
-	setPiece(std::pair{6, 7}, std::make_unique<Pawn>(WHITE));
+	setPiece(std::make_pair(6, 0), std::make_unique<Pawn>(WHITE));
+	setPiece(std::make_pair(6, 1), std::make_unique<Pawn>(WHITE));
+	setPiece(std::make_pair(6, 2), std::make_unique<Pawn>(WHITE));
+	setPiece(std::make_pair(6, 3), std::make_unique<Pawn>(WHITE));
+	setPiece(std::make_pair(6, 4), std::make_unique<Pawn>(WHITE));
+	setPiece(std::make_pair(6, 5), std::make_unique<Pawn>(WHITE));
+	setPiece(std::make_pair(6, 6), std::make_unique<Pawn>(WHITE));
+	setPiece(std::make_pair(6, 7), std::make_unique<Pawn>(WHITE));
 
 	// Black pawns
-	setPiece(std::pair{1, 0}, std::make_unique<Pawn>(BLACK));
-	setPiece(std::pair{1, 1}, std::make_unique<Pawn>(BLACK));
-	setPiece(std::pair{1, 2}, std::make_unique<Pawn>(BLACK));
-	setPiece(std::pair{1, 3}, std::make_unique<Pawn>(BLACK));
-	setPiece(std::pair{1, 4}, std::make_unique<Pawn>(BLACK));
-	setPiece(std::pair{1, 5}, std::make_unique<Pawn>(BLACK));
-	setPiece(std::pair{1, 6}, std::make_unique<Pawn>(BLACK));
-	setPiece(std::pair{1, 7}, std::make_unique<Pawn>(BLACK));
+	setPiece(std::make_pair(1, 0), std::make_unique<Pawn>(BLACK));
+	setPiece(std::make_pair(1, 1), std::make_unique<Pawn>(BLACK));
+	setPiece(std::make_pair(1, 2), std::make_unique<Pawn>(BLACK));
+	setPiece(std::make_pair(1, 3), std::make_unique<Pawn>(BLACK));
+	setPiece(std::make_pair(1, 4), std::make_unique<Pawn>(BLACK));
+	setPiece(std::make_pair(1, 5), std::make_unique<Pawn>(BLACK));
+	setPiece(std::make_pair(1, 6), std::make_unique<Pawn>(BLACK));
+	setPiece(std::make_pair(1, 7), std::make_unique<Pawn>(BLACK));
 }
 
 /* Sets a piece to its appropriate location in the map. */
@@ -104,6 +105,7 @@ bool Board::movePiece(const std::pair<int, int> &fromCoords, const std::pair<int
 	}
 
 	// Check if from location is occupied
+	//this needs to change to is occupied by the same type
 	if (!isOccupied(fromCoords))
 	{
 		std::cout << "Error: Cannot move from "
@@ -283,7 +285,7 @@ bool Board::isPathClear(const std::pair<int, int> &fromCoords, const std::pair<i
 
 		for (int i = fromTemp.first + 1; i < toTemp.first; i++)
 		{
-			if (isOccupied(std::pair{i, fromTemp.second}))
+			if (isOccupied(std::make_pair(i, fromTemp.second)))
 			{
 				return false;
 			}
@@ -302,7 +304,7 @@ bool Board::isPathClear(const std::pair<int, int> &fromCoords, const std::pair<i
 
 		for (int i = fromTemp.second + 1; i < toTemp.second; i++)
 		{
-			if (isOccupied(std::pair{fromTemp.first, i}))
+			if (isOccupied(std::make_pair(fromTemp.first, i)))
 			{
 				return false;
 			}
@@ -323,7 +325,7 @@ bool Board::isPathClear(const std::pair<int, int> &fromCoords, const std::pair<i
 
 			for (int i = fromTemp.first + 1; i < toTemp.first; i++)
 			{
-				if (isOccupied(std::pair{i, i}))
+				if (isOccupied(std::make_pair(i, i)))
 				{
 					return false;
 				}
@@ -343,7 +345,7 @@ bool Board::isPathClear(const std::pair<int, int> &fromCoords, const std::pair<i
 
 			for (int i = fromTemp.first + 1; i < toTemp.first; i++)
 			{
-				if (isOccupied(std::pair{i, 7 - i}))
+				if (isOccupied(std::make_pair(i, 7 - i)))
 				{
 					return false;
 				}
