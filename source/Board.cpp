@@ -3,6 +3,7 @@
 #include "Board.hpp"
 #include "Piece.hpp"
 #include "Pawn.hpp"
+#include "Rook.hpp"
 
 /* Constructor */
 Board::Board()
@@ -40,6 +41,11 @@ void Board::prepPieces()
 	setPiece(std::make_pair(6, 6), std::make_unique<Pawn>(WHITE));
 	setPiece(std::make_pair(6, 7), std::make_unique<Pawn>(WHITE));
 
+	// White Rooks
+	setPiece(std::make_pair(7, 0), std::make_unique<Rook>(WHITE));
+	setPiece(std::make_pair(7, 7), std::make_unique<Rook>(WHITE));
+
+
 	// Black pawns
 	setPiece(std::make_pair(1, 0), std::make_unique<Pawn>(BLACK));
 	setPiece(std::make_pair(1, 1), std::make_unique<Pawn>(BLACK));
@@ -49,6 +55,10 @@ void Board::prepPieces()
 	setPiece(std::make_pair(1, 5), std::make_unique<Pawn>(BLACK));
 	setPiece(std::make_pair(1, 6), std::make_unique<Pawn>(BLACK));
 	setPiece(std::make_pair(1, 7), std::make_unique<Pawn>(BLACK));
+
+	// Black Rooks
+	setPiece(std::make_pair(0, 0), std::make_unique<Rook>(BLACK));
+	setPiece(std::make_pair(0, 7), std::make_unique<Rook>(BLACK));
 }
 
 /* Sets a piece to its appropriate location in the map. */
