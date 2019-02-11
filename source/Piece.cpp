@@ -14,7 +14,7 @@ Piece::Piece(Type t, Color c)
 std::ostream &operator<<(std::ostream &out, const Piece &piece)
 {
 	// This has to use a getter because this is a friend function
-	out << piece.colorToChar(piece.getColor()) << '-' << piece.typeToChar(piece.getType());
+	out << " " << piece.colorToChar(piece.getColor()) << piece.typeToChar(piece.getType()) << " ";
 	return out;
 }
 

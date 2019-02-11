@@ -20,7 +20,11 @@ add_executable(Main
 		source/Square.hpp
 		source/Square.cpp
 		source/Pawn.hpp
-		source/Pawn.cpp)
+		source/Pawn.cpp
+		source/Rook.hpp 
+		source/Rook.cpp
+		source/Bishop.hpp 
+		source/Bishop.cpp)
 
 # Tests
 add_executable(BoardTest
@@ -34,5 +38,9 @@ add_executable(BoardTest
 		source/Square.hpp
 		source/Square.cpp
 		source/Pawn.hpp
-		source/Pawn.cpp)
+		source/Pawn.cpp
+		source/Rook.hpp 
+		source/Rook.cpp
+		source/Bishop.hpp 
+		source/Bishop.cpp)
 target_link_libraries(BoardTest TestRunner)

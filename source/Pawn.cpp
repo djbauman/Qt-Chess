@@ -22,12 +22,13 @@ bool Pawn::isValidMove(const Board *board, const std::pair<int, int> &fromCoords
 	}
 
 	// Must be length 1 and capture if diagonal
+	// (Edit by Daniel) Adjusted to disallow capturing friendly pieces
 	if (board->isDiagonalMove(fromCoords, toCoords))
 	{
 		// Is 1 step?
 		if (moveLength == 1)
 		{
-			if (board->isOccupied(toCoords))
+			if (board->isOccupied(toCoords) && board->getPiece(fromCoords)->getColor() != board->getPiece(toCoords)->getColor())
 			{
 				// Capture!
 				return true;

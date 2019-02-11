@@ -4,6 +4,7 @@
 #include "Piece.hpp"
 #include "Pawn.hpp"
 #include "Rook.hpp"
+#include "Bishop.hpp"
 
 /* Constructor */
 Board::Board()
@@ -45,6 +46,9 @@ void Board::prepPieces()
 	setPiece(std::make_pair(7, 0), std::make_unique<Rook>(WHITE));
 	setPiece(std::make_pair(7, 7), std::make_unique<Rook>(WHITE));
 
+	// White Bishops
+	setPiece(std::make_pair(7, 2), std::make_unique<Bishop>(WHITE));
+	setPiece(std::make_pair(7, 5), std::make_unique<Bishop>(WHITE));
 
 	// Black pawns
 	setPiece(std::make_pair(1, 0), std::make_unique<Pawn>(BLACK));
@@ -59,6 +63,10 @@ void Board::prepPieces()
 	// Black Rooks
 	setPiece(std::make_pair(0, 0), std::make_unique<Rook>(BLACK));
 	setPiece(std::make_pair(0, 7), std::make_unique<Rook>(BLACK));
+
+	// Black Bishops
+	setPiece(std::make_pair(0, 2), std::make_unique<Bishop>(BLACK));
+	setPiece(std::make_pair(0, 5), std::make_unique<Bishop>(BLACK));
 }
 
 /* Sets a piece to its appropriate location in the map. */
@@ -84,13 +92,12 @@ void Board::printBoard()
 		const Piece* piece = squares.find(key)->second->getPiece();		// get the piece at the square
 		if (piece == nullptr)
 		{
-			std::cout << "   ";											// no piece here, so print filler
+			std::cout << " -- ";											// no piece here, so print filler
 		}
 		else
 		{
 			std::cout << *piece;										// print piece
 		}
-		std::cout << " ";
 
 		if (i % 8 == 0)
 		{
@@ -98,6 +105,7 @@ void Board::printBoard()
 		}
 		i++;
 	}
+	std::cout << std::endl << std::endl;
 }
 
 /* Moves a piece at one coordinate to another coordinate. */
@@ -132,7 +140,7 @@ bool Board::movePiece(const std::pair<int, int> &fromCoords, const std::pair<int
 		return false;
 	}
 
-	// All other checks have passed to we can set the piece
+	// All other checks have passed so we can set the piece
 
 	// When the interior setPiece() function is called it sets the piece currently at that location (fromCoords) to
 	// nullptr and then returns a pointer to the piece that was previously at that location. That piece is then assigned
@@ -266,6 +274,9 @@ int Board::getMoveLength(const std::pair<int, int> &fromCoords, const std::pair<
  * function will still evaluate to true. The thinking behind this is that for all pieces except the pawn (which has its
  * own rule specificed in the Pawn class) whether a piece occupies its destination doesn't prevent its movement, it only
  * determines whether that movement results in a capture. */
+
+/* (Edit by Daniel) Added a condition to disallow moving to squares occupied by pieces of the same color. */
+
 bool Board::isPathClear(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const
 {
 	// Gather some information about the move
@@ -273,8 +284,15 @@ bool Board::isPathClear(const std::pair<int, int> &fromCoords, const std::pair<i
 	bool isVertical = isVerticalMove(fromCoords, toCoords);
 	bool isHorizontal = isHorizontalMove(fromCoords, toCoords);
 	bool isDiagonal = isDiagonalMove(fromCoords, toCoords);
-	bool movingSouth = fromCoords.first < toCoords.first; 			// "south" meaning from white side to black side
-	bool movingEast = fromCoords.second < toCoords.first;			// "east" meaning from white left to white right
+	bool movingSouth = fromCoords.first < toCoords.first; 			// "south" meaning from black side to white side
+	bool movingEast = fromCoords.second < toCoords.second;			// "east" meaning from white left to white right
+
+	// Check if the destination has a friendly piece; if so, we can't move there
+	if (isOccupied(toCoords) && (getPiece(fromCoords)->getColor() == getPiece(toCoords)->getColor()))
+	{
+		std::cout << "Invalid move (friendly piece at destination)." << std::endl;
+		return false;
+	}
 
 	// If same or adjacent location, then path is definitely clear
 	if (moveLength == 0 || moveLength == 1)
