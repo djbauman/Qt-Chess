@@ -9,7 +9,7 @@
 class Square
 {
 public:
-	const Piece* getPiece() const;
+	Piece* getPiece() const;
 	std::unique_ptr<Piece> setPiece(std::unique_ptr<Piece> piece);
 protected:
 	std::unique_ptr<Piece> piece;

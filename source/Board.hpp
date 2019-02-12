@@ -19,11 +19,13 @@ public:
 
 	// General
 	void printBoard();
-	const Piece* getPiece(const std::pair<int, int> &coords) const;
+	Piece* getPiece(const std::pair<int, int> &coords) const;
 	bool movePiece(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords);
 
 	// Board and movement attributes
 	bool isOccupied(const std::pair<int, int> &coords) const;
+	bool isOccupiedSameColor(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
+	bool isOccupiedDifferentColor(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
 	bool isVerticalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
 	bool isHorizontalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
 	bool isDiagonalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;

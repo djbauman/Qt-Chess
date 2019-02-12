@@ -77,7 +77,7 @@ std::unique_ptr<Piece> Board::setPiece(const std::pair<int, int> &coords, std::u
 
 /* Returns the piece at a given square. Finds the element in the map, then returns the Square part of that element, then
  * gets the piece at that square. */
-const Piece* Board::getPiece(const std::pair<int, int> &coords) const
+Piece* Board::getPiece(const std::pair<int, int> &coords) const
 {
 	return squares.find(coords)->second->getPiece();
 }
@@ -108,7 +108,10 @@ void Board::printBoard()
 	std::cout << std::endl << std::endl;
 }
 
-/* Moves a piece at one coordinate to another coordinate. */
+/* Attempts to move a piece from one location to another. Checks the following:
+ * - If origin and destination are on the board
+ * - If destination is occupied by piece of same color as piece at origin
+ * - If this is a valid move for the piece at the the origin */
 bool Board::movePiece(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords)
 {
 	std::cout << "Attempting to move from "
@@ -122,13 +125,12 @@ bool Board::movePiece(const std::pair<int, int> &fromCoords, const std::pair<int
 		return false;
 	}
 
-	// Check if from location is occupied
-	// TODO: This needs to change to is occupied by the same type
-	if (!isOccupied(fromCoords))
+	// Check if from location is occupied by piece of same color
+	if (isOccupiedSameColor(fromCoords, toCoords))
 	{
 		std::cout << "Error: Cannot move from "
 		<< fromCoords.first << "," << fromCoords.second
-		<< " because there's no piece there" << std::endl;
+		<< " because there's a friendly piece at destination" << std::endl;
 		return false;
 	}
 
@@ -146,6 +148,9 @@ bool Board::movePiece(const std::pair<int, int> &fromCoords, const std::pair<int
 	// nullptr and then returns a pointer to the piece that was previously at that location. That piece is then assigned
 	// to the square referenced by the parameter toCoords. Properly handles absence of a piece at a location.
 	setPiece(toCoords, setPiece(fromCoords, nullptr));
+
+	// Record that piece has moved
+	getPiece(toCoords)->setMoved(true);
 
 	return true;
 }
@@ -222,6 +227,62 @@ bool Board::isOccupied(const std::pair<int, int> &coords) const
 	return getPiece(coords) != nullptr;
 }
 
+/* Returns true if the destination is occupied by a piece of same color as the origin, false otherwise. */
+bool Board::isOccupiedSameColor(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const
+{
+	const Piece *fromPiece = getPiece(fromCoords);
+	Color fromColor;
+	if (fromPiece != nullptr)
+	{
+		fromColor = fromPiece->getColor();
+	}
+	else
+	{
+		return false;
+	}
+
+	const Piece *toPiece = getPiece(toCoords);
+	Color toColor;
+	if (toPiece != nullptr)
+	{
+		toColor = toPiece->getColor();
+	}
+	else
+	{
+		return false;
+	}
+
+	return fromColor == toColor;
+}
+
+/* Returns true if the destination is occupied by a piece of different color as the origin, false otherwise. */
+bool Board::isOccupiedDifferentColor(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const
+{
+	const Piece *fromPiece = getPiece(fromCoords);
+	Color fromColor;
+	if (fromPiece != nullptr)
+	{
+		fromColor = fromPiece->getColor();
+	}
+	else
+	{
+		return false;
+	}
+
+	const Piece *toPiece = getPiece(toCoords);
+	Color toColor;
+	if (toPiece != nullptr)
+	{
+		toColor = toPiece->getColor();
+	}
+	else
+	{
+		return false;
+	}
+
+	return fromColor != toColor;
+}
+
 /* If the column remains unchanged over the course of the move, then it's a vertical move. */
 bool Board::isVerticalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const
 {
@@ -272,11 +333,8 @@ int Board::getMoveLength(const std::pair<int, int> &fromCoords, const std::pair<
 /* Checks whether there is a clear path between two points. Note that this only checks the intermediate spaces. In
  * other words, if the destination (as recorded in toCoords) is occupied, but all spaces between are empty, then this
  * function will still evaluate to true. The thinking behind this is that for all pieces except the pawn (which has its
- * own rule specificed in the Pawn class) whether a piece occupies its destination doesn't prevent its movement, it only
+ * own rule specified in the Pawn class) whether a piece occupies its destination doesn't prevent its movement, it only
  * determines whether that movement results in a capture. */
-
-/* (Edit by Daniel) Added a condition to disallow moving to squares occupied by pieces of the same color. */
-
 bool Board::isPathClear(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const
 {
 	// Gather some information about the move
@@ -286,13 +344,6 @@ bool Board::isPathClear(const std::pair<int, int> &fromCoords, const std::pair<i
 	bool isDiagonal = isDiagonalMove(fromCoords, toCoords);
 	bool movingSouth = fromCoords.first < toCoords.first; 			// "south" meaning from black side to white side
 	bool movingEast = fromCoords.second < toCoords.second;			// "east" meaning from white left to white right
-
-	// Check if the destination has a friendly piece; if so, we can't move there
-	if (isOccupied(toCoords) && (getPiece(fromCoords)->getColor() == getPiece(toCoords)->getColor()))
-	{
-		std::cout << "Invalid move (friendly piece at destination)." << std::endl;
-		return false;
-	}
 
 	// If same or adjacent location, then path is definitely clear
 	if (moveLength == 0 || moveLength == 1)

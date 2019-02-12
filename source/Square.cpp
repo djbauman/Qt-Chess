@@ -2,7 +2,7 @@
 #include <memory>
 #include "Square.hpp"
 
-const Piece* Square::getPiece() const
+Piece* Square::getPiece() const
 {
 	return piece.get();
 }

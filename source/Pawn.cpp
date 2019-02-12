@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Pawn.hpp"
 
-// Constructor
+/* Constructor */
 Pawn::Pawn(Color c) : Piece(PAWN, c) {}
 
 /* Determine if this is a valid move based on the rules of the pawn. */
@@ -28,7 +28,7 @@ bool Pawn::isValidMove(const Board *board, const std::pair<int, int> &fromCoords
 		// Is 1 step?
 		if (moveLength == 1)
 		{
-			if (board->isOccupied(toCoords) && board->getPiece(fromCoords)->getColor() != board->getPiece(toCoords)->getColor())
+			if (board->isOccupiedDifferentColor(fromCoords, toCoords))
 			{
 				// Capture!
 				return true;
