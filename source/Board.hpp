@@ -30,8 +30,10 @@ public:
 	bool isHorizontalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
 	bool isDiagonalMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
 	bool isForwardMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords, const Piece* piece) const;
+	bool isKnightMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
 	bool isPathClear(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
 	int getMoveLength(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
+	bool isValidCastle(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
 
 	// Destructor
 	~Board();

@@ -6,15 +6,15 @@ void Game::run()
 	board.printBoard();
 
 	std::cout << "Testing pawns moving 1 space\n";
-	board.movePiece(std::make_pair(6,0), std::make_pair(5, 0));
+	board.movePiece(std::make_pair(6, 0), std::make_pair(5, 0));
 	board.printBoard();
-	board.movePiece(std::make_pair(1,1), std::make_pair(2, 1));
+	board.movePiece(std::make_pair(1, 1), std::make_pair(2, 1));
 	board.printBoard();
 
 	std::cout << "Testing pawns moving 2 spaces\n";
-	board.movePiece(std::make_pair(6,4), std::make_pair(4, 4));
+	board.movePiece(std::make_pair(6, 4), std::make_pair(4, 4));
 	board.printBoard();
-	board.movePiece(std::make_pair(1,3), std::make_pair(3, 3));
+	board.movePiece(std::make_pair(1, 3), std::make_pair(3, 3));
 	board.printBoard();
 
 	std::cout << "Testing pawn capture (enemy)\n";

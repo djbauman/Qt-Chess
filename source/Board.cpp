@@ -5,7 +5,10 @@
 #include "Pawn.hpp"
 #include "Rook.hpp"
 #include "Bishop.hpp"
+#include "Knight.hpp"
+#include "King.hpp"
 #include "Queen.hpp"
+
 
 /* Constructor */
 Board::Board()
@@ -47,10 +50,17 @@ void Board::prepPieces()
 	setPiece(std::make_pair(7, 0), std::make_unique<Rook>(WHITE));
 	setPiece(std::make_pair(7, 7), std::make_unique<Rook>(WHITE));
 
+	// White Knights
+	setPiece(std::make_pair(7, 1), std::make_unique<Knight>(WHITE));
+	setPiece(std::make_pair(7, 6), std::make_unique<Knight>(WHITE));
+
 	// White Bishops
 	setPiece(std::make_pair(7, 2), std::make_unique<Bishop>(WHITE));
 	setPiece(std::make_pair(7, 5), std::make_unique<Bishop>(WHITE));
 
+	// White King
+	setPiece(std::make_pair(7, 4), std::make_unique<King>(WHITE));
+  
 	// White Queen
 	setPiece(std::make_pair(7, 3), std::make_unique<Queen>(WHITE));
 
@@ -68,12 +78,21 @@ void Board::prepPieces()
 	setPiece(std::make_pair(0, 0), std::make_unique<Rook>(BLACK));
 	setPiece(std::make_pair(0, 7), std::make_unique<Rook>(BLACK));
 
+	// Black Knights
+	setPiece(std::make_pair(0, 1), std::make_unique<Knight>(BLACK));
+	setPiece(std::make_pair(0, 6), std::make_unique<Knight>(BLACK));
+
 	// Black Bishops
 	setPiece(std::make_pair(0, 2), std::make_unique<Bishop>(BLACK));
 	setPiece(std::make_pair(0, 5), std::make_unique<Bishop>(BLACK));
 
+
+	// Black King
+	setPiece(std::make_pair(0, 4), std::make_unique<King>(BLACK));
+  
 	// Black Queen
 	setPiece(std::make_pair(0, 3), std::make_unique<Queen>(BLACK));
+
 }
 
 /* Sets a piece to its appropriate location in the map. */
@@ -137,6 +156,7 @@ bool Board::movePiece(const std::pair<int, int> &fromCoords, const std::pair<int
 	{
 		std::cout << "Error: Cannot move from "
 		<< fromCoords.first << "," << fromCoords.second
+		<< " to " << toCoords.first << "," << toCoords.second
 		<< " because there's a friendly piece at destination" << std::endl;
 		return false;
 	}
@@ -337,6 +357,15 @@ int Board::getMoveLength(const std::pair<int, int> &fromCoords, const std::pair<
 	}
 }
 
+// The King may castle if permitted (https://en.wikipedia.org/wiki/Castling)
+bool Board::isValidCastle(const std::pair<int, int>& fromCoords, const std::pair<int, int>& toCoords) const
+{
+	// TODO: Implement castling
+	return false;
+}
+
+
+
 /* Checks whether there is a clear path between two points. Note that this only checks the intermediate spaces. In
  * other words, if the destination (as recorded in toCoords) is occupied, but all spaces between are empty, then this
  * function will still evaluate to true. The thinking behind this is that for all pieces except the pawn (which has its
@@ -351,6 +380,13 @@ bool Board::isPathClear(const std::pair<int, int> &fromCoords, const std::pair<i
 	bool isDiagonal = isDiagonalMove(fromCoords, toCoords);
 	bool movingSouth = fromCoords.first < toCoords.first; 			// "south" meaning from black side to white side
 	bool movingEast = fromCoords.second < toCoords.second;			// "east" meaning from white left to white right
+
+	// Check if the destination has a friendly piece; if so, we can't move there
+	if (isOccupied(toCoords) && (getPiece(fromCoords)->getColor() == getPiece(toCoords)->getColor()))
+	{
+		std::cout << "Invalid move (friendly piece at destination)." << std::endl;
+		return false;
+	}
 
 	// If same or adjacent location, then path is definitely clear
 	if (moveLength == 0 || moveLength == 1)
@@ -466,6 +502,23 @@ bool Board::isForwardMove(const std::pair<int, int> &fromCoords, const std::pair
 		return false;
 	}
 }
+
+/* Determines if a move is 2 squares in any direction, and 1 square in a perpendicular direction*/
+bool Board::isKnightMove(const std::pair<int, int>& fromCoords, const std::pair<int, int>& toCoords) const
+{
+	int verticalDifference = abs(toCoords.first - fromCoords.first);
+	int horizontalDifference = abs(toCoords.second - fromCoords.second);
+
+	if ((verticalDifference == 2 && horizontalDifference == 1) || (verticalDifference == 1 && horizontalDifference == 2))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+
+ }
 
 /* Destructor */
 Board::~Board() = default;
