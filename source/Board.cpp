@@ -381,13 +381,6 @@ bool Board::isPathClear(const std::pair<int, int> &fromCoords, const std::pair<i
 	bool movingSouth = fromCoords.first < toCoords.first; 			// "south" meaning from black side to white side
 	bool movingEast = fromCoords.second < toCoords.second;			// "east" meaning from white left to white right
 
-	// Check if the destination has a friendly piece; if so, we can't move there
-	if (isOccupied(toCoords) && (getPiece(fromCoords)->getColor() == getPiece(toCoords)->getColor()))
-	{
-		std::cout << "Invalid move (friendly piece at destination)." << std::endl;
-		return false;
-	}
-
 	// If same or adjacent location, then path is definitely clear
 	if (moveLength == 0 || moveLength == 1)
 	{
@@ -445,14 +438,14 @@ bool Board::isPathClear(const std::pair<int, int> &fromCoords, const std::pair<i
 				std::swap(fromTemp, toTemp);
 			}
 
-			int j = fromTemp.second + 1;
-			for (int i = fromTemp.first + 1; i < toTemp.first; i++)
+			int col = fromTemp.second + 1;
+			for (int row = fromTemp.first + 1; row < toTemp.first; row++)
 			{
-				if (isOccupied(std::make_pair(i, j)))
+				if (isOccupied(std::make_pair(row, col)))
 				{
 					return false;
 				}
-				j++;
+				col++;
 			}
 
 			// Checked all intermediate locations and found them to be empty, so can return true
@@ -467,12 +460,14 @@ bool Board::isPathClear(const std::pair<int, int> &fromCoords, const std::pair<i
 				std::swap(fromTemp, toTemp);
 			}
 
-			for (int i = fromTemp.first + 1; i < toTemp.first; i++)
+			int col = fromTemp.second + 1;
+			for (int row = fromTemp.first - 1; row > toTemp.first; row--)
 			{
-				if (isOccupied(std::make_pair(i, 7 - i)))
+				if (isOccupied(std::make_pair(row, col)))
 				{
 					return false;
 				}
+				col++;
 			}
 
 			// Checked all intermediate locations and found them to be empty, so can return true
