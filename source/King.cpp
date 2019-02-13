@@ -19,5 +19,8 @@ bool King::isValidMove(const Board *board, const std::pair<int, int> &fromCoords
 	{
 		return true;
 	}
-
+	else
+	{
+		return false;
+	}
 }
