@@ -24,7 +24,9 @@ add_executable(Main
 		source/Rook.hpp 
 		source/Rook.cpp
 		source/Bishop.hpp 
-		source/Bishop.cpp)
+		source/Bishop.cpp
+		source/Queen.hpp
+		source/Queen.cpp)
 
 # Tests
 add_executable(BoardTest
@@ -42,5 +44,7 @@ add_executable(BoardTest
 		source/Rook.hpp 
 		source/Rook.cpp
 		source/Bishop.hpp 
-		source/Bishop.cpp)
+		source/Bishop.cpp
+		source/Queen.hpp
+		source/Queen.cpp)
 target_link_libraries(BoardTest TestRunner)

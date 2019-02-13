@@ -5,6 +5,7 @@
 #include "Pawn.hpp"
 #include "Rook.hpp"
 #include "Bishop.hpp"
+#include "Queen.hpp"
 
 /* Constructor */
 Board::Board()
@@ -50,6 +51,9 @@ void Board::prepPieces()
 	setPiece(std::make_pair(7, 2), std::make_unique<Bishop>(WHITE));
 	setPiece(std::make_pair(7, 5), std::make_unique<Bishop>(WHITE));
 
+	// White Queen
+	setPiece(std::make_pair(7, 3), std::make_unique<Queen>(WHITE));
+
 	// Black pawns
 	setPiece(std::make_pair(1, 0), std::make_unique<Pawn>(BLACK));
 	setPiece(std::make_pair(1, 1), std::make_unique<Pawn>(BLACK));
@@ -67,6 +71,9 @@ void Board::prepPieces()
 	// Black Bishops
 	setPiece(std::make_pair(0, 2), std::make_unique<Bishop>(BLACK));
 	setPiece(std::make_pair(0, 5), std::make_unique<Bishop>(BLACK));
+
+	// Black Queen
+	setPiece(std::make_pair(0, 3), std::make_unique<Queen>(BLACK));
 }
 
 /* Sets a piece to its appropriate location in the map. */
@@ -402,12 +409,14 @@ bool Board::isPathClear(const std::pair<int, int> &fromCoords, const std::pair<i
 				std::swap(fromTemp, toTemp);
 			}
 
+			int j = fromTemp.second + 1;
 			for (int i = fromTemp.first + 1; i < toTemp.first; i++)
 			{
-				if (isOccupied(std::make_pair(i, i)))
+				if (isOccupied(std::make_pair(i, j)))
 				{
 					return false;
 				}
+				j++;
 			}
 
 			// Checked all intermediate locations and found them to be empty, so can return true

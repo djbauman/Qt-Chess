@@ -7,7 +7,7 @@ Rook::Rook(Color c) : Piece(ROOK, c) {}
 /* Determine if this is a valid move based on the rules of the Rook. */
 bool Rook::isValidMove(const Board *board, const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const
 {
-	int moveLength = board->getMoveLength(fromCoords, toCoords);
+	//int moveLength = board->getMoveLength(fromCoords, toCoords);
 
 	if(board->isVerticalMove(fromCoords, toCoords) || board->isHorizontalMove(fromCoords, toCoords))
 	{
@@ -21,6 +21,3 @@ bool Rook::isValidMove(const Board *board, const std::pair<int, int> &fromCoords
 	return false;
 
 }
-
-
-// Do I need to check that the final piece is a piece of the opposite color
