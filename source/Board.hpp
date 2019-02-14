@@ -19,6 +19,7 @@ public:
 
 	// General
 	void printBoard();
+	void printBoardAlgebraicAxes();
 	Piece* getPiece(const std::pair<int, int> &coords) const;
 	bool movePiece(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords);
 
@@ -35,6 +36,10 @@ public:
 	int getMoveLength(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
 	bool isValidCastle(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
 
+	// Utility functions
+	std::pair<int, int> algebraicToInt(std::string algebraicCoords) const;
+	std::string intToAlgebraic(std::pair<int, int> intCoords) const;
+
 	// Destructor
 	~Board();
 private:
@@ -48,10 +53,6 @@ private:
 	// Piece manipulation
 	std::unique_ptr<Piece> setPiece(const std::pair<int, int> &coords, std::unique_ptr<Piece> piece);
 	bool isOnBoard(const std::pair<int, int> &coords);
-
-	// Utility functions
-	std::pair<int, int> algebraicToInt(std::string algebraicCoords) const;
-	std::string intToAlgebraic(std::pair<int, int> intCoords) const;
 };
 
 #endif

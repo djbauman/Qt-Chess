@@ -8,6 +8,7 @@ class Game
 {
 public:
 	void run();
+	void testRun();
 private:
 	Board board;
 };

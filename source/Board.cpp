@@ -60,7 +60,7 @@ void Board::prepPieces()
 
 	// White King
 	setPiece(std::make_pair(7, 4), std::make_unique<King>(WHITE));
-  
+
 	// White Queen
 	setPiece(std::make_pair(7, 3), std::make_unique<Queen>(WHITE));
 
@@ -89,7 +89,7 @@ void Board::prepPieces()
 
 	// Black King
 	setPiece(std::make_pair(0, 4), std::make_unique<King>(BLACK));
-  
+
 	// Black Queen
 	setPiece(std::make_pair(0, 3), std::make_unique<Queen>(BLACK));
 
@@ -118,7 +118,7 @@ void Board::printBoard()
 		const Piece* piece = squares.find(key)->second->getPiece();		// get the piece at the square
 		if (piece == nullptr)
 		{
-			std::cout << " -- ";											// no piece here, so print filler
+			std::cout << " -- ";										// no piece here, so print filler
 		}
 		else
 		{
@@ -127,11 +127,46 @@ void Board::printBoard()
 
 		if (i % 8 == 0)
 		{
-			std::cout << std::endl;										// print newline every 8 columns
+			std::cout << "\n";											// print newline every 8 columns
 		}
 		i++;
 	}
-	std::cout << std::endl << std::endl;
+	std::cout << "\n" << "\n";
+}
+
+/* Prints the board with algebraic notation along the axes. Not the prettiest code I've ever written. */
+void Board::printBoardAlgebraicAxes()
+{
+	int iterator = 1;
+	int row = 8;
+	std::cout << "    a   b   c   d   e   f   g   h" << "\n\n";
+	for (auto const &[key, val] : squares)								// loop over contents of squares
+	{
+		if ((iterator - 1) % 8 == 0)
+		{
+			std::cout << row << "  ";									// print row number at beginning of column
+		}
+
+		const Piece* piece = squares.find(key)->second->getPiece();		// get the piece at the square
+		if (piece == nullptr)
+		{
+			std::cout << " -- ";										// no piece here, so print filler
+		}
+		else
+		{
+			std::cout << *piece;										// print piece
+		}
+
+		if (iterator % 8 == 0)
+		{
+			std::cout << "  " << row;									// print row number at end of column
+			row--;
+			std::cout << '\n';											// print newline every 8 columns
+		}
+		iterator++;
+	}
+	std::cout << '\n';
+	std::cout << "    a   b   c   d   e   f   g   h" << '\n';
 }
 
 /* Attempts to move a piece from one location to another. Checks the following:
@@ -140,24 +175,20 @@ void Board::printBoard()
  * - If this is a valid move for the piece at the the origin */
 bool Board::movePiece(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords)
 {
-	std::cout << "Attempting to move from "
-	<< fromCoords.first << "," << fromCoords.second
-	<< " to " << toCoords.first << "," << toCoords.second << std::endl;
+	std::cout << "Attempting to move from " << intToAlgebraic(fromCoords) << " to " << intToAlgebraic(toCoords) << '\n';
 
 	// Check if from and to locations are on the board
 	if (!isOnBoard(fromCoords) || !isOnBoard(toCoords))
 	{
-		std::cout << "Error: Coords are out of bounds" << std::endl;
+		std::cout << "Error: Coords are out of bounds" << '\n';
 		return false;
 	}
 
 	// Check if from location is occupied by piece of same color
 	if (isOccupiedSameColor(fromCoords, toCoords))
 	{
-		std::cout << "Error: Cannot move from "
-		<< fromCoords.first << "," << fromCoords.second
-		<< " to " << toCoords.first << "," << toCoords.second
-		<< " because there's a friendly piece at destination" << std::endl;
+		std::cout << "Error: Cannot move from " << intToAlgebraic(fromCoords) << " to " << intToAlgebraic(toCoords)
+			<< " because there's a friendly piece at " << intToAlgebraic(toCoords) << '\n';
 		return false;
 	}
 
@@ -165,7 +196,7 @@ bool Board::movePiece(const std::pair<int, int> &fromCoords, const std::pair<int
 	const Piece *piece = getPiece(fromCoords);
 	if (!piece->isValidMove(this, fromCoords, toCoords))
 	{
-		std::cout << "Error: This is an invalid move for this type of piece" << std::endl;
+		std::cout << "Error: This is an invalid move for this piece" << '\n';
 		return false;
 	}
 
@@ -182,53 +213,21 @@ bool Board::movePiece(const std::pair<int, int> &fromCoords, const std::pair<int
 	return true;
 }
 
+/* Converts algebraic coordinates to integer coordinates. For example: "a8" -> "0,0" */
 std::pair<int, int> Board::algebraicToInt(std::string algebraicCoords) const
 {
-	// TODO: Implement. Commented out code below may be helpful.
-//	const std::string letters = "abcdefgh";
-//	for (int i = 8; i >= 1; i--) 	// for iterating over numerals 1 through 8
-//	{
-//		for (int j = 0; j < 8; j++) // for iterating over letters a through g
-//		{
-//			std::pair<int,int> coords = std::make_pair(letters[j] - '0', i);// create coordinates
-//			const Piece* piece = squares.find(coords)->second->getPiece();	// get piece (or nullptr) at that coordinate
-//			if (piece == nullptr) {
-//				std::cout << "   ";											// no piece here so print empty space
-//			}
-//			else
-//			{
-//				std::cout << *piece;										// print piece
-//			}
-//			std::cout << " ";												// print spacing to separate pieces
-//		}
-//		std::cout << std::endl;												// move to next line
-//	}
-	return std::pair<int, int>();
+	int col = algebraicCoords[0] - 'a'; 			// shift ascii letter to integer
+	int row = 8 - (algebraicCoords[1] - '0');		// shift ascii letter to integer and flip
+	return std::make_pair(row,col);
 }
 
+/* Converts integer coordinates to algebraic coordinates. For example: "0,0" -> "a8" */
 std::string Board::intToAlgebraic(std::pair<int, int> intCoords) const
 {
-	// TODO: Implement. Commented out code below may be helpful.
-//	const std::string letters = "abcdefgh";
-//	for (int i = 8; i >= 1; i--) 	// for iterating over numerals 1 through 8
-//	{
-//		for (int j = 0; j < 8; j++) // for iterating over letters a through g
-//		{
-//			std::pair<int,int> coords = std::make_pair(letters[j] - '0', i);// create coordinates
-//			const Piece* piece = squares.find(coords)->second->getPiece();	// get piece (or nullptr) at that coordinate
-//			if (piece == nullptr) {
-//				std::cout << "   ";											// no piece here so print empty space
-//			}
-//			else
-//			{
-//				std::cout << *piece;										// print piece
-//			}
-//			std::cout << " ";												// print spacing to separate pieces
-//		}
-//		std::cout << std::endl;												// move to next line
-//	}
-//	return std::pair<int, int>();
-	return std::string();
+	char row = static_cast<char>(8 - intCoords.first + '0');	// shift int to ascii letter and flip
+	char col = static_cast<char>(intCoords.second + 'a');		// shift int to ascii letter
+	std::string coords = std::string() + col + row;     		// form string from chars
+	return coords;
 }
 
 /* Checks if a given location is on the board */
@@ -363,8 +362,6 @@ bool Board::isValidCastle(const std::pair<int, int>& fromCoords, const std::pair
 	// TODO: Implement castling
 	return false;
 }
-
-
 
 /* Checks whether there is a clear path between two points. Note that this only checks the intermediate spaces. In
  * other words, if the destination (as recorded in toCoords) is occupied, but all spaces between are empty, then this
@@ -513,7 +510,7 @@ bool Board::isKnightMove(const std::pair<int, int>& fromCoords, const std::pair<
 		return false;
 	}
 
- }
+}
 
 /* Destructor */
 Board::~Board() = default;
