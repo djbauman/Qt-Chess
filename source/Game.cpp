@@ -6,6 +6,7 @@
 /* Basic implementation of chess. No players, no checkmate, etc. */
 void Game::run()
 {
+
 	// TODO: Make turn-based
 	// TODO: Check game state (check, stalemate, etc.)
 
@@ -122,4 +123,5 @@ void Game::testRun()
 	std::cout << "Testing Queen Diag Other\n";
 	board.movePiece(std::make_pair(6, 5), std::make_pair(4, 7));
 	board.printBoardAlgebraicAxes();
+
 }
