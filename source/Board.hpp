@@ -17,6 +17,9 @@ public:
 	// Constructor
 	Board();
 
+	// Unit Test Constructor
+	Board(bool Pawns, bool Knights, bool Rooks, bool Bishops, bool Queens, bool Kings);
+
 	// General
 	void printBoard();
 	void printBoardAlgebraicAxes();
@@ -48,7 +51,12 @@ private:
 
 	// Preparation
 	void prepSquares();
-	void prepPieces();
+	void createPawns();
+	void createRooks();
+	void createKnights();
+	void createBishops();
+	void createQueens();
+	void createKings();
 
 	// Piece manipulation
 	std::unique_ptr<Piece> setPiece(const std::pair<int, int> &coords, std::unique_ptr<Piece> piece);

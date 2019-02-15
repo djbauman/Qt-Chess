@@ -27,8 +27,8 @@ void Game::run()
 			tokens.push_back(buf);
 		}
 
-		std::pair from = board.algebraicToInt(tokens[0]); 	// convert substring to pair
-		std::pair to = board.algebraicToInt(tokens[1]);		// convert substring to pair
+		std::pair<int, int> from = board.algebraicToInt(tokens[0]); 	// convert substring to pair
+		std::pair<int, int> to = board.algebraicToInt(tokens[1]);		// convert substring to pair
 
 		board.movePiece(from, to);
 

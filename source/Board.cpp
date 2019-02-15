@@ -14,8 +14,33 @@
 Board::Board()
 {
 	prepSquares();
-	prepPieces();
+	createPawns();
+	createRooks();
+	createKnights();
+	createBishops();
+	createQueens();
+	createKings();
 }
+
+/* Unit Test Constructor
+ * This creates a board with the pieces specified by argument parameters */
+Board::Board(bool Pawns, bool Knights, bool Rooks, bool Bishops, bool Queens, bool Kings)
+{
+	prepSquares();
+	if (Pawns)
+		{ createPawns(); }
+	if (Rooks)
+		{ createRooks(); }
+	if (Knights)
+		{ createKnights(); }
+	if (Bishops)
+		{ createBishops(); }
+	if (Queens)
+		{ createQueens(); }
+	if (Kings)
+		{ createKings(); }
+}
+
 
 /* Squares are stored in a map which maps coordinates as a pair to a unique_ptr to a Square object. For example, the
  * location that corresponds to a8 in algebraic notation would be at std::pair<0,0>.*/
@@ -31,11 +56,9 @@ void Board::prepSquares()
 	}
 }
 
-/* Creates and places the appropriate pieces on the appropriate spots to start a game. */
-void Board::prepPieces()
+/* Creates and places the appropriate Pawns on the appropriate spots to start a game. */
+void Board::createPawns()
 {
-	// TODO: Fill out the rest of the pieces.
-
 	// White pawns
 	setPiece(std::make_pair(6, 0), std::make_unique<Pawn>(WHITE));
 	setPiece(std::make_pair(6, 1), std::make_unique<Pawn>(WHITE));
@@ -46,24 +69,6 @@ void Board::prepPieces()
 	setPiece(std::make_pair(6, 6), std::make_unique<Pawn>(WHITE));
 	setPiece(std::make_pair(6, 7), std::make_unique<Pawn>(WHITE));
 
-	// White Rooks
-	setPiece(std::make_pair(7, 0), std::make_unique<Rook>(WHITE));
-	setPiece(std::make_pair(7, 7), std::make_unique<Rook>(WHITE));
-
-	// White Knights
-	setPiece(std::make_pair(7, 1), std::make_unique<Knight>(WHITE));
-	setPiece(std::make_pair(7, 6), std::make_unique<Knight>(WHITE));
-
-	// White Bishops
-	setPiece(std::make_pair(7, 2), std::make_unique<Bishop>(WHITE));
-	setPiece(std::make_pair(7, 5), std::make_unique<Bishop>(WHITE));
-
-	// White King
-	setPiece(std::make_pair(7, 4), std::make_unique<King>(WHITE));
-
-	// White Queen
-	setPiece(std::make_pair(7, 3), std::make_unique<Queen>(WHITE));
-
 	// Black pawns
 	setPiece(std::make_pair(1, 0), std::make_unique<Pawn>(BLACK));
 	setPiece(std::make_pair(1, 1), std::make_unique<Pawn>(BLACK));
@@ -73,26 +78,61 @@ void Board::prepPieces()
 	setPiece(std::make_pair(1, 5), std::make_unique<Pawn>(BLACK));
 	setPiece(std::make_pair(1, 6), std::make_unique<Pawn>(BLACK));
 	setPiece(std::make_pair(1, 7), std::make_unique<Pawn>(BLACK));
+}
+
+/* Creates and places the appropriate Rooks on the appropriate spots to start a game. */
+void Board::createRooks()
+{
+	// White Rooks
+	setPiece(std::make_pair(7, 0), std::make_unique<Rook>(WHITE));
+	setPiece(std::make_pair(7, 7), std::make_unique<Rook>(WHITE));
 
 	// Black Rooks
 	setPiece(std::make_pair(0, 0), std::make_unique<Rook>(BLACK));
 	setPiece(std::make_pair(0, 7), std::make_unique<Rook>(BLACK));
+}
+
+/* Creates and places the appropriate Knights on the appropriate spots to start a game. */
+void Board::createKnights()
+{
+	// White Knights
+	setPiece(std::make_pair(7, 1), std::make_unique<Knight>(WHITE));
+	setPiece(std::make_pair(7, 6), std::make_unique<Knight>(WHITE));
 
 	// Black Knights
 	setPiece(std::make_pair(0, 1), std::make_unique<Knight>(BLACK));
 	setPiece(std::make_pair(0, 6), std::make_unique<Knight>(BLACK));
+}
+
+/* Creates and places the appropriate Bishops on the appropriate spots to start a game. */
+void Board::createBishops()
+{
+	// White Bishops
+	setPiece(std::make_pair(7, 2), std::make_unique<Bishop>(WHITE));
+	setPiece(std::make_pair(7, 5), std::make_unique<Bishop>(WHITE));
 
 	// Black Bishops
 	setPiece(std::make_pair(0, 2), std::make_unique<Bishop>(BLACK));
 	setPiece(std::make_pair(0, 5), std::make_unique<Bishop>(BLACK));
+}
 
-
-	// Black King
-	setPiece(std::make_pair(0, 4), std::make_unique<King>(BLACK));
+/* Creates and places the appropriate Queens on the appropriate spots to start a game. */
+void Board::createQueens()
+{
+	// White Queen
+	setPiece(std::make_pair(7, 3), std::make_unique<Queen>(WHITE));
 
 	// Black Queen
 	setPiece(std::make_pair(0, 3), std::make_unique<Queen>(BLACK));
+}
 
+void Board::createKings()
+{
+	// White King
+	setPiece(std::make_pair(7, 4), std::make_unique<King>(WHITE));
+
+	// Black King
+	setPiece(std::make_pair(0, 4), std::make_unique<King>(BLACK));
 }
 
 /* Sets a piece to its appropriate location in the map. */
