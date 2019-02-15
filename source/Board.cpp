@@ -400,6 +400,8 @@ int Board::getMoveLength(const std::pair<int, int> &fromCoords, const std::pair<
 bool Board::isValidCastle(const std::pair<int, int>& fromCoords, const std::pair<int, int>& toCoords) const
 {
 	// TODO: Implement castling
+	(void)fromCoords; 	// silence compiler warnings until this function is actually implemented
+	(void)toCoords; 	// silence compiler warnings until this function is actually implemented
 	return false;
 }
 
