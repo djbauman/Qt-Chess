@@ -129,3 +129,31 @@ TEST_CASE("Integer to algebraic coordinate translation")
 	REQUIRE(board.intToAlgebraic(std::make_pair(2,2)) == "c6");
 	REQUIRE(board.intToAlgebraic(std::make_pair(3,5)) == "f5");
 }
+
+TEST_CASE("Pieces on board collection")
+{
+	// Create board with pawns, bishops, and kings
+	Board board(true, false, false, true, false, true);
+
+	// Just a rudimentary check that we have the number of pieces we expect
+	REQUIRE(board.getPieces(BLACK).size() == 11);
+	REQUIRE(board.getPieces(WHITE).size() == 11);
+}
+
+TEST_CASE("King locations")
+{
+	// Create board with only kings
+	Board board(false, false, false, false, false, true);
+
+	// Starting locations
+	REQUIRE(board.getKingLocation(BLACK) == std::make_pair(0,4));
+	REQUIRE(board.getKingLocation(WHITE) == std::make_pair(7,4));
+
+	// Move pieces
+	board.movePiece(std::make_pair(0,4), std::make_pair(1,4));
+	board.movePiece(std::make_pair(7,4), std::make_pair(7,3));
+
+	// New locations
+	REQUIRE(board.getKingLocation(BLACK) == std::make_pair(1,4));
+	REQUIRE(board.getKingLocation(WHITE) == std::make_pair(7,3));
+}

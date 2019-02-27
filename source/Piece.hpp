@@ -27,7 +27,9 @@ enum Color
 class Piece
 {
 public:
+	// Constructor
 	Piece(Type, Color);
+
 	void setColor(Color color);
 	void setType(Type type);
 	void setMoved(bool moved);
@@ -36,6 +38,8 @@ public:
 	bool getMoved() const;
 	virtual bool isValidMove(const Board *board, const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const = 0;
 	friend std::ostream& operator<< (std::ostream &out, const Piece &piece);
+
+	// Destructor
 	virtual ~Piece() = default;
 protected:
 	Color color;

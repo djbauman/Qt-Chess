@@ -3,6 +3,7 @@
 
 #include <map>
 #include <memory>
+#include <vector>
 #include "Square.hpp"
 
 // Forward declaration to avoid circular dependency
@@ -27,6 +28,7 @@ public:
 	bool movePiece(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords);
 
 	// Board and movement attributes
+	bool isValidMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
 	bool isOccupied(const std::pair<int, int> &coords) const;
 	bool isOccupiedSameColor(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
 	bool isOccupiedDifferentColor(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
@@ -36,8 +38,13 @@ public:
 	bool isForwardMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords, const Piece* piece) const;
 	bool isKnightMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
 	bool isPathClear(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
-	int getMoveLength(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
 	bool isValidCastle(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
+	int getMoveLength(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
+
+	// Pieces
+	std::vector<Piece*> getPieces(Color color) const;
+	std::vector<std::pair<int,int>> getPieceLocations(Color color) const;
+	std::pair<int,int> getKingLocation(Color color) const;
 
 	// Utility functions
 	std::pair<int, int> algebraicToInt(std::string algebraicCoords) const;
@@ -60,7 +67,7 @@ private:
 
 	// Piece manipulation
 	std::unique_ptr<Piece> setPiece(const std::pair<int, int> &coords, std::unique_ptr<Piece> piece);
-	bool isOnBoard(const std::pair<int, int> &coords);
+	bool isOnBoard(const std::pair<int, int> &coords) const;
 };
 
 #endif

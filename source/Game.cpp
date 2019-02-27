@@ -123,5 +123,43 @@ void Game::testRun()
 	std::cout << "Testing Queen Diag Other\n";
 	board.movePiece(std::make_pair(6, 5), std::make_pair(4, 7));
 	board.printBoardAlgebraicAxes();
+}
 
+bool Game::isInCheck(Color defendingColor) const
+{
+	// We'll use this to get the opposing sides' pieces
+	Color attackingColor;
+	if (defendingColor == WHITE)
+	{
+		attackingColor = BLACK;
+	}
+	else
+	{
+		attackingColor = WHITE;
+	}
+
+	// Get locations of defending king and attacking pieces
+	std::pair<int, int> kingLocation = board.getKingLocation(defendingColor);
+	std::vector<std::pair<int, int>> pieceLocations = board.getPieceLocations(attackingColor);
+
+	for (auto attackingPiece : pieceLocations)
+	{
+		if (board.isValidMove(attackingPiece, kingLocation))
+		{
+			return true;
+		}
+	}
+
+	// When you come at the king, you best not miss
+	return false;
+}
+
+bool Game::move(std::pair<int, int> fromCoords, std::pair<int, int> toCoords)
+{
+	return board.movePiece(fromCoords, toCoords);
+}
+
+void Game::printBoard()
+{
+	board.printBoardAlgebraicAxes();
 }
