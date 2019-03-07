@@ -7,7 +7,7 @@ Piece::Piece(Type t, Color c)
 {
 	type = t;
 	color = c;
-	moved = false;
+	moves = 0;
 }
 
 /* Override << operator to print out the type and color of the piece. */
@@ -40,12 +40,17 @@ void Piece::setType(Type type)
 
 bool Piece::getMoved() const
 {
-	return moved;
+	return moves > 0;
 }
 
-void Piece::setMoved(bool moved)
+void Piece::incrementMoves()
 {
-	Piece::moved = moved;
+	moves++;
+}
+
+void Piece::decrementMoves()
+{
+	moves--;
 }
 
 /* Enum converters */

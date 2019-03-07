@@ -42,7 +42,6 @@ Board::Board(bool Pawns, bool Knights, bool Rooks, bool Bishops, bool Queens, bo
 		{ createKings(); }
 }
 
-
 /* Squares are stored in a map which maps coordinates as a pair to a unique_ptr to a Square object. For example, the
  * location that corresponds to a8 in algebraic notation would be at std::pair<0,0>.*/
 void Board::prepSquares()
@@ -127,6 +126,7 @@ void Board::createQueens()
 	setPiece(std::make_pair(0, 3), std::make_unique<Queen>(BLACK));
 }
 
+/* Creates and places Kings on the appropriate spots to start a game. */
 void Board::createKings()
 {
 	// White King
@@ -171,6 +171,9 @@ void Board::printBoard()
 			std::cout << "\n";											// print newline every 8 columns
 		}
 		i++;
+
+		// This variable is currently unused - so this silences the compiler warnings
+		(void) val;
 	}
 	std::cout << "\n" << "\n";
 }
@@ -205,6 +208,9 @@ void Board::printBoardAlgebraicAxes()
 			std::cout << '\n';											// print newline every 8 columns
 		}
 		iterator++;
+
+		// This variable is currently unused - so this silences the compiler warnings
+		(void) val;
 	}
 	std::cout << '\n';
 	std::cout << "    a   b   c   d   e   f   g   h" << '\n';
@@ -213,12 +219,21 @@ void Board::printBoardAlgebraicAxes()
 /* Attempts to move a piece from one location to another. Checks the following:
  * - If origin and destination are on the board
  * - If destination is occupied by piece of same color as piece at origin
- * - If this is a valid move for the piece at the the origin */
+ * - If this is a valid move for the piece at the the origin
+ * Note that this function does not check gameplay characteristics like check and checkmate.
+ * */
 bool Board::movePiece(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords)
 {
 	if (isValidMove(fromCoords, toCoords))
 	{
 		// All checks have passed so we can set the piece
+
+		// If the piece represents a capture (i.e., destination is occupied), then save captured piece
+		if (squares[toCoords]->getPiece() != nullptr)
+		{
+			size_t index = moves.size();
+			capturedPieces.insert(std::pair<int, std::unique_ptr<Piece>>(index, setPiece(toCoords, nullptr)));
+		}
 
 		// When the interior setPiece() function is called it sets the piece currently at that location (fromCoords) to
 		// nullptr and then returns a pointer to the piece that was previously at that location. That piece is then assigned
@@ -226,7 +241,8 @@ bool Board::movePiece(const std::pair<int, int> &fromCoords, const std::pair<int
 		setPiece(toCoords, setPiece(fromCoords, nullptr));
 
 		// Record that piece has moved
-		getPiece(toCoords)->setMoved(true);
+		getPiece(toCoords)->incrementMoves();
+		moves.emplace_back(fromCoords, toCoords);
 
 		return true;
 	}
@@ -535,22 +551,24 @@ bool Board::isKnightMove(const std::pair<int, int>& fromCoords, const std::pair<
 
 }
 
+/* Determine whether this a valid move. */
 bool Board::isValidMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const
 {
-	std::cout << "Attempting to move from " << intToAlgebraic(fromCoords) << " to " << intToAlgebraic(toCoords) << '\n';
+	// TODO: Decide what to do about commented-out console statements.
+	// std::cout << "Attempting to move from " << intToAlgebraic(fromCoords) << " to " << intToAlgebraic(toCoords) << '\n';
 
 	// Check if from and to locations are on the board
 	if (!isOnBoard(fromCoords) || !isOnBoard(toCoords))
 	{
-		std::cout << "Error: Coords are out of bounds" << '\n';
+		// std::cout << "Error: Coords are out of bounds" << '\n';
 		return false;
 	}
 
 	// Check if to location is occupied by piece of same color
 	if (isOccupiedSameColor(fromCoords, toCoords))
 	{
-		std::cout << "Error: Cannot move from " << intToAlgebraic(fromCoords) << " to " << intToAlgebraic(toCoords)
-				  << " because there's a friendly piece at " << intToAlgebraic(toCoords) << '\n';
+		// std::cout << "Error: Cannot move from " << intToAlgebraic(fromCoords) << " to " << intToAlgebraic(toCoords)
+		// 		  << " because there's a friendly piece at " << intToAlgebraic(toCoords) << '\n';
 		return false;
 	}
 
@@ -558,12 +576,12 @@ bool Board::isValidMove(const std::pair<int, int> &fromCoords, const std::pair<i
 	const Piece *piece = getPiece(fromCoords);
 	if (piece == nullptr)
 	{
-		std::cout << "Error: No piece at this starting square" << '\n';
+		// std::cout << "Error: No piece at this starting square" << '\n';
 		return false;
 	}
 	if (!piece->isValidMove(this, fromCoords, toCoords))
 	{
-		std::cout << "Error: This is an invalid move for this piece" << '\n';
+		// std::cout << "Error: This is an invalid move for this piece" << '\n';
 		return false;
 	}
 
@@ -605,17 +623,93 @@ std::pair<int, int> Board::getKingLocation(Color color) const
 	return std::make_pair(-1,-1);
 }
 
+/* Returns all locations of pieces of a particular color. */
 std::vector<std::pair<int, int>> Board::getPieceLocations(Color color) const
 {
 	std::vector<std::pair<int, int>> pieceLocations;
 	pieceLocations.reserve(squares.size());
 
-	for (auto const& square : squares) {
+	for (auto const& square : squares)
+	{
 		Piece* piece = square.second->getPiece();
 		if (piece != nullptr && piece->getColor() == color)
 		{
 			pieceLocations.push_back(square.first);
 		}
+	}
+
+	return pieceLocations;
+}
+
+/* Print the move history of the board */
+void Board::printMoves()
+{
+	for (auto i : moves)
+	{
+		std::cout << intToAlgebraic(i.first) << " to " << intToAlgebraic(i.second) << '\n';
+	}
+}
+
+/* Moves a piece from one location on the board to another WITHOUT ANY ERROR CHECKING OR MOVE VALIDATION. Designed to
+ * be used internally for the purposes of reverting movement history. This functionality is necessary because the
+ * logic of the movePiece function will only allow "valid" moves. Reversing the movement of a pawn, for example, would
+ * not be a valid move, and so would be impossible without a function like this. */
+void Board::forceMovePiece(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords)
+{
+	// When the interior setPiece() function is called it sets the piece currently at that location (fromCoords) to
+	// nullptr and then returns a pointer to the piece that was previously at that location. That piece is then assigned
+	// to the square referenced by the parameter toCoords. Properly handles absence of a piece at a location.
+	setPiece(toCoords, setPiece(fromCoords, nullptr));
+
+	// Note that this function does not record that a piece has moved, nor does it add it to the list of moves on the
+	// board since it is only designed to be used outside the constraints of a normal game.
+}
+
+/* Revert the last move on the board. Can be called repeatedly to reverse state to beginning of game. */
+void Board::revertLastMove()
+{
+	// Get last move off the moves vector
+	std::pair<std::pair<int, int>, std::pair<int, int>> lastMove = moves.back();
+
+	// Reverse the last move, i.e. if it's A → B then move A ← B
+	forceMovePiece(lastMove.second, lastMove.first);
+
+	// If this move represented a capture, replace the piece that was captured
+	size_t previousMove = moves.size() - 1;
+	if (capturedPieces.find(previousMove) != capturedPieces.end())
+	{
+		// Move the piece from capturedPieces map to the board
+		setPiece(lastMove.second, std::move(capturedPieces[previousMove]));
+
+		// Erase the entry from capturedPieces map
+		capturedPieces.erase(previousMove);
+	}
+
+	// Remove it from move vector
+	moves.pop_back();
+
+	// Decrement move counter in piece
+	getPiece(lastMove.first)->decrementMoves();
+}
+
+/* Print all pieces in capturedPieces map. */
+void Board::printCapturedPieces()
+{
+	for (auto& entry : capturedPieces)
+	{
+		std::cout << entry.first << " " << *entry.second << '\n';
+	}
+}
+
+/* Returns a vector of all the locations on the board. */
+std::vector<std::pair<int, int>> Board::getLocations() const
+{
+	std::vector<std::pair<int, int>> pieceLocations;
+	pieceLocations.reserve(squares.size());
+
+	for (auto const& square : squares)
+	{
+		pieceLocations.push_back(square.first);
 	}
 
 	return pieceLocations;

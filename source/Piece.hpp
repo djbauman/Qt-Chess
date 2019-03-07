@@ -8,7 +8,7 @@ class Board;
 
 /* The Piece class is an abstract class from which specific pieces (Pawn, Rook, etc.) will inherit. */
 
-    enum Type
+enum Type
 {
 	PAWN,
 	KNIGHT,
@@ -32,7 +32,8 @@ public:
 
 	void setColor(Color color);
 	void setType(Type type);
-	void setMoved(bool moved);
+	void incrementMoves();
+	void decrementMoves();
 	Color getColor() const;
 	Type getType() const;
 	bool getMoved() const;
@@ -44,7 +45,7 @@ public:
 protected:
 	Color color;
 	Type type;
-	bool moved;
+	int moves;
 	char typeToChar(Type type) const;
 	char colorToChar(Color color) const;
 };

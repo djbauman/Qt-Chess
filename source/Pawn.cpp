@@ -56,7 +56,7 @@ bool Pawn::isValidMove(const Board *board, const std::pair<int, int> &fromCoords
 		// Is length 2?
 		if (moveLength == 2)
 		{
-			if (!moved && board->isPathClear(fromCoords, toCoords))
+			if (!getMoved() && board->isPathClear(fromCoords, toCoords))
 			{
 				return true;
 			}

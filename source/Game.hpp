@@ -16,9 +16,13 @@ public:
 
 	// Attributes
 	bool isInCheck(Color defendingColor) const;
+	bool isInCheckMate(Color defendingColor);
+	bool isInStalemate(Color defendingColor);
+	Color getTurn(int moveNumber) const;
 
 	// Utilities
 	void printBoard();
+	std::string printColor(Color color);
 
 private:
 	Board board;

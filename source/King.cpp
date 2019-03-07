@@ -15,7 +15,7 @@ bool King::isValidMove(const Board *board, const std::pair<int, int> &fromCoords
 	{
 		return true;
 	}
-	else if (!moved && board->isValidCastle(fromCoords, toCoords))
+	else if (!getMoved() && board->isValidCastle(fromCoords, toCoords))
 	{
 		return true;
 	}
