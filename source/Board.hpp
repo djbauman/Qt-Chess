@@ -24,6 +24,7 @@ public:
 	void printBoardAlgebraicAxes();
 	Piece* getPiece(const std::pair<int, int> &coords) const;
 	bool movePiece(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords);
+	void setRook(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords);
 	void revertLastMove();
 
 	// Board and movement attributes
@@ -38,7 +39,6 @@ public:
 	bool isForwardMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords, const Piece* piece) const;
 	bool isKnightMove(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
 	bool isPathClear(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
-	bool isValidCastle(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
 	int getMoveLength(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords) const;
 
 	// Pieces and locations

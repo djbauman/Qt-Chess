@@ -71,3 +71,58 @@ TEST_CASE("Stalemate condition")
 	// Black is now in stalemate
 	REQUIRE(game.isInStalemate(BLACK) == true);
 }
+
+TEST_CASE("Castling white")
+{
+	Game game;
+	Board board; 	// only used for coordinate conversions
+
+	// Set up an invalid castling
+	game.move(board.algebraicToInt("e2"), board.algebraicToInt("e4"));
+	game.move(board.algebraicToInt("e7"), board.algebraicToInt("e5"));
+	game.move(board.algebraicToInt("f1"), board.algebraicToInt("a6"));
+	game.move(board.algebraicToInt("f8"), board.algebraicToInt("c5"));
+	game.move(board.algebraicToInt("g1"), board.algebraicToInt("h3"));
+	game.move(board.algebraicToInt("c5"), board.algebraicToInt("d4"));
+	game.move(board.algebraicToInt("f2"), board.algebraicToInt("f3"));
+	game.move(board.algebraicToInt("d4"), board.algebraicToInt("e3"));
+
+	// Attempt to castle - should return false because leaves king in check
+	REQUIRE(game.castle(WHITE, board.algebraicToInt("e1"), board.algebraicToInt("g1")) == false);
+
+	// Set up a valid castling
+	game.move(board.algebraicToInt("h3"), board.algebraicToInt("f2"));
+	game.move(board.algebraicToInt("d8"), board.algebraicToInt("h4"));
+
+	// Attempt to castle - should succeed
+	REQUIRE(game.castle(WHITE, board.algebraicToInt("e1"), board.algebraicToInt("g1")) == true);
+}
+
+TEST_CASE("Castling black")
+{
+	Game game;
+	Board board; 	// only used for coordinate conversions
+
+	// Set up an invalid castling
+	game.move(board.algebraicToInt("e2"), board.algebraicToInt("e3"));
+	game.move(board.algebraicToInt("b8"), board.algebraicToInt("a6"));
+	game.move(board.algebraicToInt("d1"), board.algebraicToInt("g4"));
+	game.move(board.algebraicToInt("e7"), board.algebraicToInt("e6"));
+	game.move(board.algebraicToInt("h2"), board.algebraicToInt("h3"));
+	game.move(board.algebraicToInt("d8"), board.algebraicToInt("h4"));
+	game.move(board.algebraicToInt("g2"), board.algebraicToInt("g3"));
+	game.move(board.algebraicToInt("d7"), board.algebraicToInt("d6"));
+	game.move(board.algebraicToInt("f2"), board.algebraicToInt("f3"));
+	game.move(board.algebraicToInt("c8"), board.algebraicToInt("d7"));
+	game.move(board.algebraicToInt("g4"), board.algebraicToInt("g5"));
+
+	// Attempt to castle - should return false because leaves king in check
+	REQUIRE(game.castle(BLACK, board.algebraicToInt("e8"), board.algebraicToInt("c8")) == false);
+
+	// Set up a valid castling
+	game.move(board.algebraicToInt("f7"), board.algebraicToInt("f6"));
+	game.move(board.algebraicToInt("d2"), board.algebraicToInt("d3"));
+
+	// Attempt to castle - should succeed
+	REQUIRE(game.castle(BLACK, board.algebraicToInt("e8"), board.algebraicToInt("c8")) == true);
+}

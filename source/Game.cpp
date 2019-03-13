@@ -86,6 +86,23 @@ void Game::run()
 			continue;
 		}
 
+		// Check if this is an attempted castle and handle accordingly
+		if (board.getPiece(from)->getType() == KING && board.getMoveLength(from, to) > 1)
+		{
+			if (castle(toMove, from, to))
+			{
+				currentMove++;
+				toMove = getTurn(currentMove);
+			}
+			else
+			{
+				std::cout << "Error: This is an invalid castle." << '\n';
+			}
+
+			// We've already handled the move, so skip rest of loop and start from top
+			continue;
+		}
+
 		// Attempt move piece
 		if (board.movePiece(from, to))
 		{
@@ -302,6 +319,96 @@ bool Game::isInStalemate(Color defendingColor)
 	}
 
 	// No other options for defendingColor, so return true for isStalemate
+	return true;
+}
+
+/* If valid castling, carries out and returns true, else returns false. Castling requires:
+ * - The king and the chosen rook are on the player's first rank.
+ * - Neither the king nor the chosen rook has previously moved.
+ * - There are no pieces between the king and the chosen rook.
+ * - The king is not currently in check.
+ * - The king does not pass through a square that is attacked by an enemy piece.
+ * - The king does not end up in check. */
+bool Game::castle(const Color toMove, const std::pair<int, int> from, const std::pair<int, int> to)
+{
+	// Get the rook we're going to castle with and intermediate location
+	Piece* rook;
+	std::pair<int,int> intermediateLocation;
+	std::pair<int,int> rookLocation;
+	if (to == board.algebraicToInt("g8"))
+	{
+		rookLocation = board.algebraicToInt("h8");
+		intermediateLocation = board.algebraicToInt("f8");
+	}
+	else if (to == board.algebraicToInt("c8"))
+	{
+		rookLocation = board.algebraicToInt("a8");
+		intermediateLocation = board.algebraicToInt("d8");
+	}
+	else if (to == board.algebraicToInt("g1"))
+	{
+		rookLocation = board.algebraicToInt("h1");
+		intermediateLocation = board.algebraicToInt("f1");
+	}
+	else if (to == board.algebraicToInt("c1"))
+	{
+		rookLocation = board.algebraicToInt("a1");
+		intermediateLocation = board.algebraicToInt("d1");
+	}
+	else
+	{
+		return false;
+	}
+
+	// Get a pointer to the rook
+	rook = board.getPiece(rookLocation);
+
+	// Check if there is a clear path and that destination is clear and that it's a horizontal move
+	if (!board.isPathClear(from, rookLocation) || !board.isHorizontalMove(from, to))
+	{
+		return false;
+	}
+
+	// Verify that king is not in check
+	if (isInCheck(toMove))
+	{
+		return false;
+	}
+
+	// Verify that king and concerned rook haven't moved yet
+	if (board.getPiece(from)->getMoved() || rook->getMoved())
+	{
+		return false;
+	}
+
+	// Carry out move, stepping back if king ends up in check
+	// First step for king
+	if (board.movePiece(from, intermediateLocation))
+	{
+		// Verify that move doesn't put player in check
+		if (isInCheck(toMove))
+		{
+			// If move puts player in check, revert move, and let player enter different move
+			board.revertLastMove();
+			return false;
+		}
+
+	}
+	// Second step for king
+	if (board.movePiece(intermediateLocation, to))
+	{
+		// Verify that move doesn't put player in check
+		if (isInCheck(toMove))
+		{
+			// If move puts player in check, revert last two moves, and let player enter different move
+			board.revertLastMove();
+			board.revertLastMove();
+			return false;
+		}
+	}
+
+	// At this point the king has moved legally and we can set the rook and return true
+	board.setRook(rookLocation, intermediateLocation);
 	return true;
 }
 

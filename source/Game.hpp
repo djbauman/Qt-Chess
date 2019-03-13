@@ -13,6 +13,7 @@ public:
 
 	// Movement
 	bool move(std::pair<int,int> fromCoords, std::pair<int,int> toCoords);
+	bool castle(Color toMove, std::pair<int, int> from, std::pair<int, int> to);
 
 	// Attributes
 	bool isInCheck(Color defendingColor) const;

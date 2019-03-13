@@ -393,15 +393,6 @@ int Board::getMoveLength(const std::pair<int, int> &fromCoords, const std::pair<
 	}
 }
 
-// The King may castle if permitted (https://en.wikipedia.org/wiki/Castling)
-bool Board::isValidCastle(const std::pair<int, int>& fromCoords, const std::pair<int, int>& toCoords) const
-{
-	// TODO: Implement castling
-	(void)fromCoords; 	// silence compiler warnings until this function is actually implemented
-	(void)toCoords; 	// silence compiler warnings until this function is actually implemented
-	return false;
-}
-
 /* Checks whether there is a clear path between two points. Note that this only checks the intermediate spaces. In
  * other words, if the destination (as recorded in toCoords) is occupied, but all spaces between are empty, then this
  * function will still evaluate to true. The thinking behind this is that for all pieces except the pawn (which has its
@@ -713,6 +704,12 @@ std::vector<std::pair<int, int>> Board::getLocations() const
 	}
 
 	return pieceLocations;
+}
+
+/* Allows setting of castle without checking usual move dynamics. Used for castling. */
+void Board::setRook(const std::pair<int, int> &fromCoords, const std::pair<int, int> &toCoords)
+{
+	forceMovePiece(fromCoords, toCoords);
 }
 
 /* Destructor */
