@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 #include "Square.hpp"
+#include <string>
 
 // Forward declaration to avoid circular dependency
 class Piece;
