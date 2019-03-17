@@ -128,3 +128,27 @@ add_executable(KnightTest
 		source/Queen.hpp
 		source/Queen.cpp)
 target_link_libraries(KnightTest TestRunner)
+
+add_executable(BishopTest
+		test/BishopTest.cpp
+		source/Game.hpp
+		source/Game.cpp
+		source/Board.hpp
+		source/Board.cpp
+		source/Piece.hpp
+		source/Piece.cpp
+		source/Square.hpp
+		source/Square.cpp
+		source/Pawn.hpp
+		source/Pawn.cpp
+		source/Rook.hpp
+		source/Rook.cpp
+		source/Bishop.hpp
+		source/Bishop.cpp
+		source/Knight.hpp
+		source/Knight.cpp
+		source/King.hpp
+		source/King.cpp
+		source/Queen.hpp
+		source/Queen.cpp)
+target_link_libraries(KnightTest TestRunner)
