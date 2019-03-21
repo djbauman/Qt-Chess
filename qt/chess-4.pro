@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2019-03-04T21:55:36
+# Project created by QtCreator 2019-03-05T18:05:19
 #
 #-------------------------------------------------
 
@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = chess3
+TARGET = chess-4
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -25,14 +25,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-    counter.cpp \
     main.cpp \
     space.cpp \
+    display.cpp \
     engine.cpp
 
 HEADERS += \
-    counter.h \
     space.h \
+    display.h \
     engine.h
 
 # Default rules for deployment.

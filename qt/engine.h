@@ -1,8 +1,8 @@
+#include <QDebug>
+#include<QObject>
+
 #ifndef ENGINE_H
 #define ENGINE_H
-
-#include <QObject>
-#include <QDebug>
 
 class Engine : public QObject
 {
@@ -13,6 +13,8 @@ public:
 public slots:
     void getInput(QString input);
 
+signals:
+    void sendResponse(int response);
 };
 
 #endif // ENGINE_H
