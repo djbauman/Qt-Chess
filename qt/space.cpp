@@ -8,6 +8,7 @@ Space::Space(QString input, int x, int y)
     xCoord = x;
     yCoord = y;
     image.setParentItem(this);
+    image.scale();
 
 //    setFlag(QGraphicsItem::ItemIsFocusable);
 //    setFocus();
