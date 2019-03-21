@@ -1,26 +1,30 @@
 #ifndef SPACE_H
 #define SPACE_H
 
-#include <QGraphicsSceneMouseEvent>
-#include <QGraphicsPixmapItem>
+#include <QDebug>
+#include <QObject>
 #include <QGraphicsRectItem>
-#include <QKeyEvent>
-#include <QString>
-#include <QDebug> // for testing and debugging
+#include <QGraphicsSceneMouseEvent>
+#include <QImage>
+#include <QBrush>
+#include <string>
 
-class Space : public QObject, public QGraphicsRectItem
+class Space: public QObject, public QGraphicsRectItem
 {
     Q_OBJECT
+public:
+    Space(int x, int y);
+    void mousePressEvent(QGraphicsSceneMouseEvent *e);
+    void setName(QString );
+    QString getName();
+    void setImage(QString path);
+    void clearImage();
+
 private:
     QString name;
-    QGraphicsPixmapItem image;
+    QGraphicsPixmapItem piece;
     int xCoord;
     int yCoord;
-
-public:
-    Space(QString, int, int);
-    void setImage(QString);
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
 signals:
     QString sendSignal(QString name);

@@ -1,10 +1,12 @@
 #include "engine.h"
 
-Engine::Engine(){
+Engine::Engine()
+{
 
 }
 
 void Engine::getInput(QString input)
 {
-    qDebug() << "Signal received by slot in: " << input;
+    qDebug() << "Engine saw that " << input << "was clicked, and will now respond.";
+    emit sendResponse(17);
 }
