@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/images">
-        <file>board.png</file>
-        <file>white-pawn-small.png</file>
         <file>black-pawn-small.png</file>
+        <file>white-pawn-small.png</file>
     </qresource>
 </RCC>

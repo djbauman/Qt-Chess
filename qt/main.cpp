@@ -1,5 +1,6 @@
 #include "space.h"
 #include "engine.h"
+#include "counter.h"
 
 #include <QApplication>
 #include <QGraphicsScene>
@@ -16,6 +17,7 @@ int main(int argc, char *argv[])
 //    Counter counter1, counter2;
 //    QObject::connect(&counter1, &Counter::valueChanged, &counter2, &Counter::setValue);
 //    counter1.setValue(12);
+    Counter counter1;
     Engine engine1;
 
     // create scene on the heap
@@ -29,7 +31,7 @@ int main(int argc, char *argv[])
     a8->setImage(":/images/white-pawn-small.png");
     scene->addItem(a8);
 
-    QObject::connect(a8, SIGNAL(sendSignal(QString)), &engine1, SLOT(getInput(QString)));
+    QObject::connect(a8, SIGNAL(sendSignal(QString)), &counter1, SLOT(getInput(QString)));
 
 //    // Add a PixmapItem representing a piece
 //    QGraphicsPixmapItem* item = new QGraphicsPixmapItem();
@@ -43,7 +45,7 @@ int main(int argc, char *argv[])
     a7->setRect(50, 0, 50, 50);
     a7->setImage(":/images/black-pawn-small.png");
     scene->addItem(a7);
-    QObject::connect(a7, SIGNAL(sendSignal(QString)), &engine1, SLOT(getInput(QString)));
+    QObject::connect(a7, SIGNAL(sendSignal(QString)), &counter1, SLOT(getInput(QString)));
 
 //    Space * a6 = new Space("a6", 0, 0);
 //    a6->setRect(100, 0, 50, 50);
