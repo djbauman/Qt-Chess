@@ -28,7 +28,8 @@ QString Space::getName(){
 void Space::setImage(QString path)
 {
     piece.setPixmap(path);
-    piece.setPos(xCoord +8, yCoord+3);
+//    piece.setPos(xCoord +8, yCoord+3); // offset if necessary
+    piece.setPos(xCoord, yCoord);
     piece.show();
 }
 

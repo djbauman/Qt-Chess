@@ -5,6 +5,7 @@
 #include <QObject>
 #include "space.h"
 #include "engine.h"
+#include "./chess-files/Game.hpp"
 
 class Display: public QObject
 {
@@ -12,6 +13,7 @@ class Display: public QObject
 private:
     QGraphicsScene * DisplayScene;
     Engine engine;
+    Game game;
     QList<Space *> spaceList;
     QString move;
     void setup();
