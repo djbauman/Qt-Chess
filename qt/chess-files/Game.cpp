@@ -75,6 +75,13 @@ void Game::run()
 		std::pair<int, int> from = board.algebraicToInt(tokens[0]); 	// convert substring to pair
 		std::pair<int, int> to = board.algebraicToInt(tokens[1]);		// convert substring to pair
 
+		// Verify that a piece was selected
+		if (board.getPiece(from) == nullptr)
+		{
+			std::cout << "Error: No piece at this starting square" << '\n';
+			continue;
+		}
+
 		// Verify that the correct player is moving
 		if (board.getPiece(from)->getColor() != toMove)
 		{
