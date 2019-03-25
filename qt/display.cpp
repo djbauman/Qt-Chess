@@ -1,9 +1,9 @@
-#include "Display.h"
+#include "display.h"
 
 Display::Display()
 {
-    // Connect Engine signal with Display slot
-    QObject::connect(&engine, SIGNAL(sendResponse(int)), this, SLOT(getResponse(int)));
+    // Connect Game signal with Display slot
+    QObject::connect(&game, SIGNAL(sendResponse(QString)), this, SLOT(getResponse(QString)));
     DisplayScene = new QGraphicsScene();
     setup();
     placePiece();
@@ -22,8 +22,8 @@ void Display::setup()
         s->setName(spacename);
         spaceList.append(s);
         DisplayScene->addItem(s);
-        // Connect Space signal with Engine slot
-        QObject::connect(s, SIGNAL(sendSignal(QString)), &engine, SLOT(getInput(QString)));
+        // Connect Space signal with Game slot
+        QObject::connect(s, SIGNAL(sendSignal(QString)), &game, SLOT(getInput(QString)));
 
         j += 50;
         if (j == 400)
@@ -42,37 +42,97 @@ void Display::setup()
 
 void Display::placePiece()
 {
-    spaceList[0]->setImage(":/images/black-pawn-small.png");
-    spaceList[1]->setImage(":/images/black-pawn-small.png");
-    spaceList[2]->setImage(":/images/black-pawn-small.png");
-    spaceList[3]->setImage(":/images/black-pawn-small.png");
-    spaceList[4]->setImage(":/images/black-pawn-small.png");
-    spaceList[5]->setImage(":/images/black-pawn-small.png");
-    spaceList[6]->setImage(":/images/black-pawn-small.png");
-    spaceList[7]->setImage(":/images/black-pawn-small.png");
+    spaceList[0]->setImage(":/images/50px/BlackRook.png");
+    spaceList[1]->setImage(":/images/50px/BlackKnight.png");
+    spaceList[2]->setImage(":/images/50px/BlackBishop.png");
+    spaceList[3]->setImage(":/images/50px/BlackQueen.png");
+    spaceList[4]->setImage(":/images/50px/BlackKing.png");
+    spaceList[5]->setImage(":/images/50px/BlackBishop.png");
+    spaceList[6]->setImage(":/images/50px/BlackKnight.png");
+    spaceList[7]->setImage(":/images/50px/BlackRook.png");
+    spaceList[8]->setImage(":/images/50px/BlackPawn.png");
+    spaceList[9]->setImage(":/images/50px/BlackPawn.png");
+    spaceList[10]->setImage(":/images/50px/BlackPawn.png");
+    spaceList[11]->setImage(":/images/50px/BlackPawn.png");
+    spaceList[12]->setImage(":/images/50px/BlackPawn.png");
+    spaceList[13]->setImage(":/images/50px/BlackPawn.png");
+    spaceList[14]->setImage(":/images/50px/BlackPawn.png");
+    spaceList[15]->setImage(":/images/50px/BlackPawn.png");
+
+    spaceList[48]->setImage(":/images/50px/WhitePawn.png");
+    spaceList[49]->setImage(":/images/50px/WhitePawn.png");
+    spaceList[50]->setImage(":/images/50px/WhitePawn.png");
+    spaceList[51]->setImage(":/images/50px/WhitePawn.png");
+    spaceList[52]->setImage(":/images/50px/WhitePawn.png");
+    spaceList[53]->setImage(":/images/50px/WhitePawn.png");
+    spaceList[54]->setImage(":/images/50px/WhitePawn.png");
+    spaceList[55]->setImage(":/images/50px/WhitePawn.png");
+    spaceList[56]->setImage(":/images/50px/WhiteRook.png");
+    spaceList[57]->setImage(":/images/50px/WhiteKnight.png");
+    spaceList[58]->setImage(":/images/50px/WhiteBishop.png");
+    spaceList[59]->setImage(":/images/50px/WhiteQueen.png");
+    spaceList[60]->setImage(":/images/50px/WhiteKing.png");
+    spaceList[61]->setImage(":/images/50px/WhiteBishop.png");
+    spaceList[62]->setImage(":/images/50px/WhiteKnight.png");
+    spaceList[63]->setImage(":/images/50px/WhiteRook.png");
 }
 
 
 
-void Display::collectMove(QString m)
-{
-    move+=m;
-    if (move.length()==4)
-    {
-        qDebug() << move;
-        move = "";
-    }
-}
+//void Display::collectMove(QString m)
+//{
+//    move+=m;
+//    if (move.length()==4)
+//    {
+//        qDebug() << move;
+//        move = "";
+//    }
+//}
 
 QGraphicsScene* Display::getScene()
 {
     return DisplayScene;
 }
 
-void Display::getResponse(int response)
+void Display::getResponse(QString response)
 {
-    qDebug() << "Display: Response from Engine is " << response;
+    std::string responseString = response.toStdString();
+
+    // If response was "Invalid Response", ignore it
+    if (responseString.compare("Invalid Move") == 0)
+    {
+        qDebug() << "Display got the Invalid Move response; ignoring.";
+        return;
+    }
+    // Otherwise, use the response from Game to move the correct pieces
+    else
+    {
+        qDebug() << "Display got permission from Game to move icons.";
+//        qDebug() << "The response Game sent back was " << response;
+
+        QString firstSpace = "";
+        QString secondSpace = "";
+        firstSpace += response[0];
+        firstSpace += response[1];
+        secondSpace += response[2];
+        secondSpace += response[3];
+
+        QString temp;
+        for (int i=0; i<spaceList.length(); i++ )
+        {
+            if (spaceList[i]->getName() == firstSpace)
+            {
+                temp = spaceList[i]->getImage();
+                spaceList[i]->clearImage();
+            }
+        }
+        for (int i=0; i<spaceList.length(); i++ )
+        {
+            if (spaceList[i]->getName() == secondSpace)
+            {
+                spaceList[i]->setImage(temp);
+            }
+        }
+    }
+
 }
-
-// Receive signal from Engine indicating result of the move
-

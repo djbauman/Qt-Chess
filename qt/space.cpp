@@ -9,6 +9,8 @@ Space::Space(int x, int y)
     piece.setParentItem(this);
 }
 
+// When a space is clicked, the QString name is sent via sendSignal()
+// to Display's slot
 void Space::mousePressEvent(QGraphicsSceneMouseEvent *ev){
     if(ev->buttons() == Qt::LeftButton){
         qDebug() << "You clicked " << name;
@@ -27,11 +29,17 @@ QString Space::getName(){
 
 void Space::setImage(QString path)
 {
+    image = path;
     piece.setPixmap(path);
-    piece.setPos(xCoord +8, yCoord+3);
+    piece.setPos(xCoord, yCoord);
     piece.show();
 }
 
+QString Space::getImage()
+{
+    return image;
+
+}
 void Space::clearImage()
 {
     piece.hide();

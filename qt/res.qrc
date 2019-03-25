@@ -1,6 +1,16 @@
 <RCC>
     <qresource prefix="/images">
-        <file>black-pawn-small.png</file>
-        <file>white-pawn-small.png</file>
+        <file>50px/BlackBishop.png</file>
+        <file>50px/BlackKing.png</file>
+        <file>50px/BlackKnight.png</file>
+        <file>50px/BlackPawn.png</file>
+        <file>50px/BlackQueen.png</file>
+        <file>50px/BlackRook.png</file>
+        <file>50px/WhiteBishop.png</file>
+        <file>50px/WhiteKing.png</file>
+        <file>50px/WhiteKnight.png</file>
+        <file>50px/WhitePawn.png</file>
+        <file>50px/WhiteQueen.png</file>
+        <file>50px/WhiteRook.png</file>
     </qresource>
 </RCC>

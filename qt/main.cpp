@@ -1,5 +1,7 @@
 #include "space.h"
 #include "display.h"
+#include "./chess-files/Board.hpp"
+#include "./chess-files/Game.hpp"
 #include <QApplication>
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
@@ -17,11 +19,7 @@ int main(int argc, char *argv[])
 
     QGraphicsView* view = new QGraphicsView(D.getScene());
 
-    // Connect signals
-
-
     view->show();
-
 
     return a.exec();
 }

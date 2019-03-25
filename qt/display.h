@@ -4,18 +4,19 @@
 #include <QGraphicsScene>
 #include <QObject>
 #include "space.h"
-#include "engine.h"
+#include "./chess-files/Game.hpp"
 
 class Display: public QObject
 {
     Q_OBJECT
 private:
     QGraphicsScene * DisplayScene;
-    Engine engine;
+    Game game;
+//    int currentMove = 0; // 0 for White, 1 for Black
     QList<Space *> spaceList;
     QString move;
     void setup();
-    void collectMove(QString);
+//    void collectMove(QString);
     void placePiece();
 
     const QString spaces[64] =
@@ -35,7 +36,7 @@ public:
     QGraphicsScene* getScene();
 
 public slots:
-    void getResponse(int response);
+    void getResponse(QString response);
 
 };
 
