@@ -3,8 +3,7 @@
 Display::Display()
 {
     // Connect Game signal with Display slot
-//    QObject::connect(&engine, SIGNAL(sendResponse(int)), this, SLOT(getResponse(int)));
-    QObject::connect(&game, SIGNAL(sendResponse(int)), this, SLOT(getResponse(int)));
+    QObject::connect(&game, SIGNAL(sendResponse(QString)), this, SLOT(getResponse(QString)));
     DisplayScene = new QGraphicsScene();
     setup();
     placePiece();
@@ -24,7 +23,6 @@ void Display::setup()
         spaceList.append(s);
         DisplayScene->addItem(s);
         // Connect Space signal with Game slot
-//        QObject::connect(s, SIGNAL(sendSignal(QString)), &engine, SLOT(getInput(QString)));
         QObject::connect(s, SIGNAL(sendSignal(QString)), &game, SLOT(getInput(QString)));
 
         j += 50;
@@ -61,7 +59,6 @@ void Display::placePiece()
     spaceList[14]->setImage(":/images/50px/BlackPawn.png");
     spaceList[15]->setImage(":/images/50px/BlackPawn.png");
 
-
     spaceList[48]->setImage(":/images/50px/WhitePawn.png");
     spaceList[49]->setImage(":/images/50px/WhitePawn.png");
     spaceList[50]->setImage(":/images/50px/WhitePawn.png");
@@ -82,25 +79,60 @@ void Display::placePiece()
 
 
 
-void Display::collectMove(QString m)
-{
-    move+=m;
-    if (move.length()==4)
-    {
-        qDebug() << move;
-        move = "";
-    }
-}
+//void Display::collectMove(QString m)
+//{
+//    move+=m;
+//    if (move.length()==4)
+//    {
+//        qDebug() << move;
+//        move = "";
+//    }
+//}
 
 QGraphicsScene* Display::getScene()
 {
     return DisplayScene;
 }
 
-void Display::getResponse(int response)
+void Display::getResponse(QString response)
 {
-    qDebug() << "Display: Got a response of " << response;
+    std::string responseString = response.toStdString();
+
+    // If response was "Invalid Response", ignore it
+    if (responseString.compare("Invalid Move") == 0)
+    {
+        qDebug() << "Display got the Invalid Move response; ignoring.";
+        return;
+    }
+    // Otherwise, use the response from Game to move the correct pieces
+    else
+    {
+        qDebug() << "Display got permission from Game to move icons.";
+//        qDebug() << "The response Game sent back was " << response;
+
+        QString firstSpace = "";
+        QString secondSpace = "";
+        firstSpace += response[0];
+        firstSpace += response[1];
+        secondSpace += response[2];
+        secondSpace += response[3];
+
+        QString temp;
+        for (int i=0; i<spaceList.length(); i++ )
+        {
+            if (spaceList[i]->getName() == firstSpace)
+            {
+                temp = spaceList[i]->getImage();
+                spaceList[i]->clearImage();
+            }
+        }
+        for (int i=0; i<spaceList.length(); i++ )
+        {
+            if (spaceList[i]->getName() == secondSpace)
+            {
+                spaceList[i]->setImage(temp);
+            }
+        }
+    }
+
 }
-
-// Receive signal from Engine indicating result of the move
-

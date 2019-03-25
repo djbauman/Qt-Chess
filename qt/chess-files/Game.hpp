@@ -3,7 +3,7 @@
 
 #include <QDebug>
 #include <QObject>
-
+#include <QString>
 #include <iostream>
 #include "Board.hpp"
 
@@ -13,6 +13,7 @@ class Game : public QObject
 public:
 	// Start game
 	void run();
+    void guiRun(); // alternate run mode for the Qt GUI
 	void testRun();
 
 	// Movement
@@ -29,14 +30,20 @@ public:
 
 private:
 	Board board;
-
+    QString guimove;
+//    QString move1QStr;
+//    QString move2QStr;
+    std::string move1 = "";
+    std::string move2 = "";
+    Color guiTurn = WHITE;
+    void resetMoves();
 
 // Qt Signaling
 public slots:
     void getInput(QString input);
 
 signals:
-    void sendResponse(int response);
+    void sendResponse(QString response);
 
 };
 

@@ -18,13 +18,16 @@ public:
     void setName(QString );
     QString getName();
     void setImage(QString path);
+    QString getImage();
     void clearImage();
 
 private:
     QString name;
     QGraphicsPixmapItem piece;
+    QString image;
     int xCoord;
     int yCoord;
+
 
 signals:
     QString sendSignal(QString name);

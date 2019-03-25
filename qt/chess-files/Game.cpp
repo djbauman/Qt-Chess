@@ -106,6 +106,12 @@ void Game::run()
 	}
 }
 
+/* For running via Qt signals */
+void Game::guiRun()
+{
+    return;
+}
+
 /* For trying out different chess play configurations. */
 void Game::testRun()
 {
@@ -190,8 +196,10 @@ void Game::testRun()
 
 	std::cout << "Testing Queen Diag Other\n";
 	board.movePiece(std::make_pair(6, 5), std::make_pair(4, 7));
-	board.printBoardAlgebraicAxes();
+    board.printBoardAlgebraicAxes();
 }
+
+
 
 /* Determines whether a player is in check based on qualities of the Board. */
 bool Game::isInCheck(Color defendingColor) const
@@ -298,14 +306,105 @@ std::string Game::printColor(Color color)
     }
 }
 
-// Qt Signaling
-// This function is a Qt slot - a function designed to receive QObject signals.
-// It receives a signal from the Display whenever a space is pressed
-// Upon collecting two spaces, the move (e.g. "a2 a4") can be passed into the
-// Game logic
+// Clear move1 and move2 strings
+void Game::resetMoves()
+{
+    move1 = "";
+    move2 = "";
+}
 
+
+// This function is a Qt slot, a function designed to receive QObject signals.
+// It receives a signal from the Display whenever a space is clicked. Upon collecting
+// two spaces, the move can be executed if it is valid, or ignored if not.
 void Game::getInput(QString input)
 {
-    qDebug() << "Game saw that " << input << "was clicked, and will now respond.";
-    emit sendResponse(17);
+    qDebug() << "Engine saw that " << input << "was clicked, and will now respond.";
+
+    // If this is the first click, store it in move1
+    if (move1 == "")
+    {
+        move1 = input.toStdString();
+    }
+    // If this is the second click, store it in move2
+    else
+    {
+        move2 = input.toStdString();
+
+        // We can now pass the move to the Game
+        std::pair<int, int> from = board.algebraicToInt(move1); 	// convert substring to pair
+        std::pair<int, int> to = board.algebraicToInt(move2);		// convert substring to pair
+
+        // Verify that a piece was selected
+        if (board.getPiece(from) == nullptr)
+        {
+            qDebug() << "No piece selected.";
+            sendResponse("Invalid Move");
+            resetMoves();
+            return;
+        }
+
+        // Verify that the correct player is moving
+        Color toMove;
+        if (guiTurn == WHITE)
+        {
+            toMove = WHITE;
+        }
+        else {
+            toMove = BLACK;
+        }
+
+        if (board.getPiece(from)->getColor() != toMove)
+        {
+            std::cout << "Error: It's " << printColor(toMove) << "'s turn." << '\n';
+            qDebug() << "Game.cpp: Error: Not your turn.";
+            emit sendResponse("Invalid Move");
+            resetMoves();
+            return;
+        }
+
+        // Attempt to move piece
+        if (board.movePiece(from, to))
+        {
+            // Verify that move doesn't put player in check, else switch players
+            if (isInCheck(toMove))
+            {
+                // If move puts player in check, print error, revert move, and let player enter different move
+                std::cout << "Error: This leaves " << printColor(toMove) << " in check.\n";
+                qDebug() << "Error: This leaves you in check.";
+                board.revertLastMove();
+                sendResponse("Invalid Move");
+            }
+            // If the move was valid, switch turns and send "Valid" response
+            else
+            {
+                if (guiTurn == WHITE)
+                {
+                    guiTurn = BLACK;
+                }
+                else {
+                    guiTurn = WHITE;
+                }
+
+                // Send QString response containing the two spaces of the valid move
+                QString sendStr = "";
+                QString part1 = QString::fromStdString(move1);
+                QString part2 = QString::fromStdString(move2);
+                sendStr += part1;
+                sendStr += part2;
+                sendResponse(sendStr);
+            }
+        }
+        else
+        {
+            std::cout << "Error: Invalid move.\n";
+            qDebug() << "Error: Invalid move.";
+            sendResponse("Invalid Move");
+        }
+
+        resetMoves();
+    }
+    //qs.toStdString()
+
+
 }
