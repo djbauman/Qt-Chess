@@ -13,13 +13,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     Display D;
-    // create scene on the heap
-    // QGraphicsScene * scene = new chessgame();
-//    QGraphicsView * view = new QGraphicsView(scene);
-
     QGraphicsView* view = new QGraphicsView(D.getScene());
-
     view->show();
-
     return a.exec();
 }

@@ -1,10 +1,12 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
-#include <string>
-#include <QGraphicsScene>
-#include <QObject>
+
 #include "space.h"
 #include "./chess-files/Game.hpp"
+
+#include <QGraphicsScene>
+#include <QObject>
+
 
 class Display: public QObject
 {
@@ -12,12 +14,13 @@ class Display: public QObject
 private:
     QGraphicsScene * DisplayScene;
     Game game;
-//    int currentMove = 0; // 0 for White, 1 for Black
     QList<Space *> spaceList;
     QString move;
     void setup();
-//    void collectMove(QString);
-    void placePiece();
+    void placePieces();
+    Color turnColor;
+    QGraphicsTextItem * turn;
+    QGraphicsTextItem * check;
 
     const QString spaces[64] =
     {

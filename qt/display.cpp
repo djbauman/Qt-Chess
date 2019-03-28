@@ -6,7 +6,8 @@ Display::Display()
     QObject::connect(&game, SIGNAL(sendResponse(QString)), this, SLOT(getResponse(QString)));
     DisplayScene = new QGraphicsScene();
     setup();
-    placePiece();
+    placePieces();
+    turnColor = WHITE;
 }
 
 void Display::setup()
@@ -36,11 +37,23 @@ void Display::setup()
     QString matchText = "Player 1 vs Player 2";
     QGraphicsTextItem * match = new QGraphicsTextItem();
     match->setPlainText(matchText);
-    match->setPos(400, 0);
+    match->setPos(425, 0);
     DisplayScene->addItem(match);
+
+    QString toMove = "White's turn";
+    turn = new QGraphicsTextItem();
+    turn->setPlainText(toMove);
+    turn->setPos(425, 100);
+    DisplayScene->addItem(turn);
+
+    QString state = "";
+    check = new QGraphicsTextItem();
+    check->setPlainText(state);
+    check->setPos(425, 200);
+    DisplayScene->addItem(check);
 }
 
-void Display::placePiece()
+void Display::placePieces()
 {
     spaceList[0]->setImage(":/images/50px/BlackRook.png");
     spaceList[1]->setImage(":/images/50px/BlackKnight.png");
@@ -78,30 +91,37 @@ void Display::placePiece()
 }
 
 
-
-//void Display::collectMove(QString m)
-//{
-//    move+=m;
-//    if (move.length()==4)
-//    {
-//        qDebug() << move;
-//        move = "";
-//    }
-//}
-
 QGraphicsScene* Display::getScene()
 {
     return DisplayScene;
 }
 
+// Get a response from the Game object and change the
+// images of pieces on the board appropriately
 void Display::getResponse(QString response)
 {
     std::string responseString = response.toStdString();
 
-    // If response was "Invalid Response", ignore it
+    if (responseString.compare("Check") == 0)
+    {
+        qDebug() << "Check";
+        check->setPlainText("Check!");
+    }
+    else
+    {
+        check->setPlainText("");
+    }
+
+    // If response was "Invalid Move", ignore it
     if (responseString.compare("Invalid Move") == 0)
     {
-        qDebug() << "Display got the Invalid Move response; ignoring.";
+        qDebug() << "Invalid Move";
+        return;
+    }
+    else if (responseString.compare("Checkmate") == 0)
+    {
+        qDebug() << "Checkmate!";
+        check->setPlainText("Checkmate!");
         return;
     }
     // Otherwise, use the response from Game to move the correct pieces
@@ -132,6 +152,16 @@ void Display::getResponse(QString response)
             {
                 spaceList[i]->setImage(temp);
             }
+        }
+        if (turnColor == WHITE)
+        {
+            turnColor = BLACK;
+            turn->setPlainText("Black's Turn");
+        }
+        else
+        {
+            turnColor = WHITE;
+            turn->setPlainText("White's Turn");
         }
     }
 
