@@ -4,17 +4,15 @@ Space::Space(int x, int y)
 {
     xCoord = x;
     yCoord = y;
-    setFlag(QGraphicsItem::ItemIsFocusable);
-    setFocus();
+//    setFlag(QGraphicsItem::ItemIsFocusable);
+//    setFocus();
     piece.setParentItem(this);
 }
 
-// When a space is clicked, the QString name is sent via sendSignal()
-// to Display's slot
+// When clicked, space name is sent to Display's slot
 void Space::mousePressEvent(QGraphicsSceneMouseEvent *ev){
     if(ev->buttons() == Qt::LeftButton){
         qDebug() << "You clicked " << name;
-        //topLevelItem()->collectMove(name);
     }
     emit sendSignal(name);
 }

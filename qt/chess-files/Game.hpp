@@ -31,8 +31,6 @@ public:
 private:
 	Board board;
     QString guimove;
-//    QString move1QStr;
-//    QString move2QStr;
     std::string move1 = "";
     std::string move2 = "";
     Color guiTurn = WHITE;

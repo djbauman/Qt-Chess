@@ -326,7 +326,7 @@ void Game::resetMoves()
 // two spaces, the move can be executed if it is valid, or ignored if not.
 void Game::getInput(QString input)
 {
-    qDebug() << "Engine saw that " << input << "was clicked, and will now respond.";
+    qDebug() << "Game saw that " << input << "was clicked, and will now respond.";
 
     // If this is the first click, store it in move1
     if (move1 == "")
@@ -351,19 +351,9 @@ void Game::getInput(QString input)
             return;
         }
 
-        // Verify that the correct player is moving
-        Color toMove;
-        if (guiTurn == WHITE)
+        if (board.getPiece(from)->getColor() != guiTurn)
         {
-            toMove = WHITE;
-        }
-        else {
-            toMove = BLACK;
-        }
-
-        if (board.getPiece(from)->getColor() != toMove)
-        {
-            std::cout << "Error: It's " << printColor(toMove) << "'s turn." << '\n';
+            std::cout << "Error: It's " << printColor(guiTurn) << "'s turn." << '\n';
             qDebug() << "Game.cpp: Error: Not your turn.";
             emit sendResponse("Invalid Move");
             resetMoves();
@@ -371,13 +361,14 @@ void Game::getInput(QString input)
         }
 
         // Attempt to move piece
+        // TODO: Check for castling here?
         if (board.movePiece(from, to))
         {
             // Verify that move doesn't put player in check, else switch players
-            if (isInCheck(toMove))
+            if (isInCheck(guiTurn))
             {
                 // If move puts player in check, print error, revert move, and let player enter different move
-                std::cout << "Error: This leaves " << printColor(toMove) << " in check.\n";
+                std::cout << "Error: This leaves " << printColor(guiTurn) << " in check.\n";
                 qDebug() << "Error: This leaves you in check.";
                 board.revertLastMove();
                 sendResponse("Invalid Move");
@@ -409,9 +400,16 @@ void Game::getInput(QString input)
             sendResponse("Invalid Move");
         }
 
+        if(isInCheckMate(guiTurn)==true)
+        {
+            sendResponse("Checkmate");
+        }
+        else if (isInCheck(guiTurn)==true)
+        {
+            sendResponse("Check");
+        }
+
         resetMoves();
     }
-    //qs.toStdString()
-
 
 }
