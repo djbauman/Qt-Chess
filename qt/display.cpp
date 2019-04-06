@@ -14,12 +14,25 @@ void Display::setup()
 {
     int j = 0;
     int k = 0;
+    bool black = true;
     for(int i=0; i<64; i++)
     {
         QString spacename = spaces[i];
         Space * s = new Space(j,k);
         s->setRect(j,k,50,50); //x loc, y loc, width, height
-        s->setBrush(Qt::lightGray);
+
+        // Color squares
+        if (i % 8 == 0)
+        {
+            black = !black;
+        }
+
+        if (black)
+        {
+            s->setBrush(Qt::lightGray);
+        }
+        black = !black;
+
         s->setName(spacename);
         spaceList.append(s);
         DisplayScene->addItem(s);
@@ -124,35 +137,85 @@ void Display::getResponse(QString response)
         check->setPlainText("Checkmate!");
         return;
     }
+    else if (responseString.compare("Stalemate") == 0)
+    {
+        qDebug() << "Stalemate!";
+        check->setPlainText("Stalemate!");
+        return;
+    }
     // Otherwise, use the response from Game to move the correct pieces
     else
     {
         qDebug() << "Display got permission from Game to move icons.";
 //        qDebug() << "The response Game sent back was " << response;
-
-        QString firstSpace = "";
-        QString secondSpace = "";
-        firstSpace += response[0];
-        firstSpace += response[1];
-        secondSpace += response[2];
-        secondSpace += response[3];
-
-        QString temp;
-        for (int i=0; i<spaceList.length(); i++ )
+        if (response == "Castle White Kingside")
         {
-            if (spaceList[i]->getName() == firstSpace)
+            qDebug() << "Display needs to castle white kingside.";
+            QString tempKing = spaceList[60]->getImage();
+            spaceList[60]->clearImage();
+            QString tempRook = spaceList[63]->getImage();
+            spaceList[63]->clearImage();
+
+            spaceList[62]->setImage(tempKing);
+            spaceList[61]->setImage(tempRook);
+        } else if (response == "Castle White Queenside")
+        {
+            qDebug() << "Display needs to castle white queenside.";
+            QString tempKing = spaceList[60]->getImage();
+            spaceList[60]->clearImage();
+            QString tempRook = spaceList[56]->getImage();
+            spaceList[56]->clearImage();
+
+            spaceList[58]->setImage(tempKing);
+            spaceList[59]->setImage(tempRook);
+        } else if (response == "Castle Black Kingside")
+        {
+            qDebug() << "Display needs to castle black kingside.";
+            QString tempKing = spaceList[4]->getImage();
+            spaceList[4]->clearImage();
+            QString tempRook = spaceList[7]->getImage();
+            spaceList[7]->clearImage();
+
+            spaceList[6]->setImage(tempKing);
+            spaceList[5]->setImage(tempRook);
+        } else if (response == "Castle Black Queenside")
+        {
+            qDebug() << "Display needs to castle black queenside.";
+            QString tempKing = spaceList[4]->getImage();
+            spaceList[4]->clearImage();
+            QString tempRook = spaceList[0]->getImage();
+            spaceList[0]->clearImage();
+
+            spaceList[2]->setImage(tempKing);
+            spaceList[3]->setImage(tempRook);
+        }
+        else
+        {
+            QString firstSpace = "";
+            QString secondSpace = "";
+            firstSpace += response[0];
+            firstSpace += response[1];
+            secondSpace += response[2];
+            secondSpace += response[3];
+
+            QString temp;
+            for (int i=0; i<spaceList.length(); i++ )
             {
-                temp = spaceList[i]->getImage();
-                spaceList[i]->clearImage();
+                if (spaceList[i]->getName() == firstSpace)
+                {
+                    temp = spaceList[i]->getImage();
+                    spaceList[i]->clearImage();
+                }
+            }
+            for (int i=0; i<spaceList.length(); i++ )
+            {
+                if (spaceList[i]->getName() == secondSpace)
+                {
+                    spaceList[i]->setImage(temp);
+                }
             }
         }
-        for (int i=0; i<spaceList.length(); i++ )
-        {
-            if (spaceList[i]->getName() == secondSpace)
-            {
-                spaceList[i]->setImage(temp);
-            }
-        }
+
         if (turnColor == WHITE)
         {
             turnColor = BLACK;

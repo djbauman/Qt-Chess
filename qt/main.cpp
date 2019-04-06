@@ -12,6 +12,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    a.setApplicationDisplayName("Chara Chess");
     Display D;
     QGraphicsView* view = new QGraphicsView(D.getScene());
     view->show();

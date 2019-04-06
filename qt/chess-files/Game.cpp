@@ -3,11 +3,9 @@
 #include <sstream>
 #include "Game.hpp"
 
-/* Basic implementation of chess. No players, no checkmate, etc. */
+/* Basic implementation of chess. */
 void Game::run()
 {
-	// TODO: Check checkmate (i.e. no moves for the player in check) and stalemate (no moves for anyone)
-
 	// Set up turn-based game
 	std::string input;
 	int currentMove = 1;
@@ -20,15 +18,21 @@ void Game::run()
 	while (true)
 	{
 		// Determine if a player is in check
-		if (isInCheck(toMove))
+		if (isInCheckMate(toMove))
 		{
 			std::cout << printColor(toMove) << " is in checkmate. Game over." << '\n';
-            // Send a certain signal
+			break;
+		}
+
+		// Determine if a player is in check
+		if (isInStalemate(toMove))
+		{
+			std::cout << printColor(toMove) << " is in stalemate. Draw." << '\n';
 			break;
 		}
 
 		// Print board
-		board.printBoardAlgebraicAxes();
+		printBoard();
 
 		// Get first input
 		std::cout << printColor(toMove) << "'s turn. Enter move: ";
@@ -81,11 +85,28 @@ void Game::run()
 			std::cout << "Error: No piece at this starting square" << '\n';
 			continue;
 		}
-    
+
 		// Verify that the correct player is moving
 		if (board.getPiece(from)->getColor() != toMove)
 		{
 			std::cout << "Error: It's " << printColor(toMove) << "'s turn." << '\n';
+			continue;
+		}
+
+		// Check if this is an attempted castle and handle accordingly
+		if (board.getPiece(from)->getType() == KING && board.getMoveLength(from, to) > 1)
+		{
+			if (castle(toMove, from, to))
+			{
+				currentMove++;
+				toMove = getTurn(currentMove);
+			}
+			else
+			{
+				std::cout << "Error: This is an invalid castle." << '\n';
+			}
+
+			// We've already handled the move, so skip rest of loop and start from top
 			continue;
 		}
 
@@ -113,7 +134,6 @@ void Game::run()
 	}
 }
 
-/* For running via Qt signals */
 void Game::guiRun()
 {
     return;
@@ -203,10 +223,8 @@ void Game::testRun()
 
 	std::cout << "Testing Queen Diag Other\n";
 	board.movePiece(std::make_pair(6, 5), std::make_pair(4, 7));
-    board.printBoardAlgebraicAxes();
+	board.printBoardAlgebraicAxes();
 }
-
-
 
 /* Determines whether a player is in check based on qualities of the Board. */
 bool Game::isInCheck(Color defendingColor) const
@@ -238,7 +256,9 @@ bool Game::isInCheck(Color defendingColor) const
 	return false;
 }
 
-/* Returns true if a color is in checkmate. */
+/* Returns true if a player is in checkmate. The conditions of checkmate are:
+ * - In check
+ * - No legal moves */
 bool Game::isInCheckMate(Color defendingColor)
 {
 	if (isInCheck(defendingColor))
@@ -272,6 +292,135 @@ bool Game::isInCheckMate(Color defendingColor)
 	}
 
 	// No other options for defendingColor, so return true for isCheckMate
+	return true;
+}
+
+/* Returns true if a player is in stalemate. The conditions of stalemate are:
+ * - Not in check
+ * - No legal moves */
+bool Game::isInStalemate(Color defendingColor)
+{
+	if (isInCheck(defendingColor))
+	{
+		return false;
+	}
+	else
+	{
+		std::vector<std::pair<int, int>> pieceLocations = board.getPieceLocations(defendingColor);
+		std::vector<std::pair<int, int>> locations = board.getLocations();
+
+		for (auto const &pieceLocation : pieceLocations)
+		{
+			for (auto const &location : locations)
+			{
+				// Attempt move piece
+				if (board.movePiece(pieceLocation, location))
+				{
+					// If player is still not in check after this move, then revert move and return false.
+					if (!isInCheck(defendingColor))
+					{
+						board.revertLastMove();
+						return false; // not in stalemate
+					}
+
+					// We'll also need to revert the last move if the player was still in check.
+					board.revertLastMove();
+				}
+			}
+		}
+	}
+
+	// No other options for defendingColor, so return true for isStalemate
+	return true;
+}
+
+/* If valid castling, carries out and returns true, else returns false. Castling requires:
+ * - The king and the chosen rook are on the player's first rank.
+ * - Neither the king nor the chosen rook has previously moved.
+ * - There are no pieces between the king and the chosen rook.
+ * - The king is not currently in check.
+ * - The king does not pass through a square that is attacked by an enemy piece.
+ * - The king does not end up in check. */
+bool Game::castle(const Color toMove, const std::pair<int, int> from, const std::pair<int, int> to)
+{
+	// Get the rook we're going to castle with and intermediate location
+	Piece* rook;
+	std::pair<int,int> intermediateLocation;
+	std::pair<int,int> rookLocation;
+	if (to == board.algebraicToInt("g8"))
+	{
+		rookLocation = board.algebraicToInt("h8");
+		intermediateLocation = board.algebraicToInt("f8");
+	}
+	else if (to == board.algebraicToInt("c8"))
+	{
+		rookLocation = board.algebraicToInt("a8");
+		intermediateLocation = board.algebraicToInt("d8");
+	}
+	else if (to == board.algebraicToInt("g1"))
+	{
+		rookLocation = board.algebraicToInt("h1");
+		intermediateLocation = board.algebraicToInt("f1");
+	}
+	else if (to == board.algebraicToInt("c1"))
+	{
+		rookLocation = board.algebraicToInt("a1");
+		intermediateLocation = board.algebraicToInt("d1");
+	}
+	else
+	{
+		return false;
+	}
+
+	// Get a pointer to the rook
+	rook = board.getPiece(rookLocation);
+
+	// Check if there is a clear path and that destination is clear and that it's a horizontal move
+	if (!board.isPathClear(from, rookLocation) || !board.isHorizontalMove(from, to))
+	{
+		return false;
+	}
+
+	// Verify that king is not in check
+	if (isInCheck(toMove))
+	{
+		return false;
+	}
+
+	// Verify that king and concerned rook haven't moved yet
+	if (board.getPiece(from)->getMoved() || rook->getMoved())
+	{
+		return false;
+	}
+
+	// Carry out move, stepping back if king ends up in check
+	// First step for king
+	if (board.movePiece(from, intermediateLocation))
+	{
+		// Verify that move doesn't put player in check
+		if (isInCheck(toMove))
+		{
+			// If move puts player in check, revert move, and let player enter different move
+			board.revertLastMove();
+			return false;
+		}
+
+	}
+	// Second step for king
+	if (board.movePiece(intermediateLocation, to))
+	{
+		// Verify that move doesn't put player in check
+		if (isInCheck(toMove))
+		{
+			// If move puts player in check, revert last two moves, and let player enter different move
+			board.revertLastMove();
+			board.revertLastMove();
+			return false;
+		}
+	}
+
+	// At this point the king has moved legally and we can set the rook and return true
+	board.setRook(rookLocation, intermediateLocation);
 	return true;
 }
 
@@ -312,6 +461,19 @@ std::string Game::printColor(Color color)
 		return "Black";
     }
 }
+
+// Change guiTurn between White/Black
+void Game::switchGuiTurn()
+{
+    if (guiTurn == WHITE)
+    {
+        guiTurn = BLACK;
+    }
+    else {
+        guiTurn = WHITE;
+    }
+}
+
 
 // Clear move1 and move2 strings
 void Game::resetMoves()
@@ -360,9 +522,50 @@ void Game::getInput(QString input)
             return;
         }
 
+        // Check if this is an attempted castle and handle accordingly
+        if (board.getPiece(from)->getType() == KING && board.getMoveLength(from, to) > 1)
+        {
+            if (castle(guiTurn, from, to))
+            {
+                switchGuiTurn();
+                qDebug() << "Castled!";
+                // Signal the Display to change the images appropriately
+                // If it is the White King...
+                if (from.first == 7)
+                {
+                    // If Kingside...
+                    if (to.second == 6)
+                    {
+                        emit sendResponse("Castle White Kingside");
+                    }
+                    else
+                    {
+                        emit sendResponse("Castle White Queenside");
+                    }
+                }
+                // else if it is the Black King...
+                else if (from.first == 0)
+                {
+                    if (to.second == 6)
+                    {
+                        emit sendResponse("Castle Black Kingside");
+                    }
+                    else
+                    {
+                        emit sendResponse("Castle Black Queenside");
+                    }
+                }
+            }
+            else
+            {
+                std::cout << "Error: This is an invalid castle." << '\n';
+                qDebug() << "Error: Invalid castle.";
+            }
+        }
+
         // Attempt to move piece
         // TODO: Check for castling here?
-        if (board.movePiece(from, to))
+        else if (board.movePiece(from, to))
         {
             // Verify that move doesn't put player in check, else switch players
             if (isInCheck(guiTurn))
@@ -376,13 +579,7 @@ void Game::getInput(QString input)
             // If the move was valid, switch turns and send "Valid" response
             else
             {
-                if (guiTurn == WHITE)
-                {
-                    guiTurn = BLACK;
-                }
-                else {
-                    guiTurn = WHITE;
-                }
+                switchGuiTurn();
 
                 // Send QString response containing the two spaces of the valid move
                 QString sendStr = "";
@@ -407,6 +604,10 @@ void Game::getInput(QString input)
         else if (isInCheck(guiTurn)==true)
         {
             sendResponse("Check");
+        }
+        else if(isInStalemate(guiTurn))
+        {
+            sendResponse("Stalemate");
         }
 
         resetMoves();

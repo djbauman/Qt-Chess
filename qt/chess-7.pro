@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2019-03-07T20:02:48
+# Project created by QtCreator 2019-03-13T16:23:39
 #
 #-------------------------------------------------
 
@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = chess-6
+TARGET = chess-7
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
